@@ -49,6 +49,14 @@ function App() {
 
   const handleSearch = (e) => setSearchTerm(e.target.value);
 
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      handleSearch(searchTerm);
+    }, 300);
+
+    return () => clearTimeout(delay);
+  }, [searchTerm]);
+
   const handleAddCustomer = (customerData) => {
     if (editingCustomer) {
       // Update existing customer
@@ -279,33 +287,24 @@ function App() {
       <main className="main-container">
         {viewMode === "list" ? (
           <>
-            <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
-              <input
-                type="text"
-                placeholder="Search by name or ID..."
-                value={searchTerm}
-                onChange={handleSearch}
-                style={{
-                  flex: 1,
-                  padding: "10px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "16px",
-                }}
-              />
-              <button
-                onClick={() => setShowForm(true)}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#2196F3",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "16px",
-                }}
-              >
-                Add Customer
+            <div className="toolbar">
+              <div className="search-box">
+                <div className="search-box-premium">
+                  <span className="icon">🔍</span>
+
+                  <input
+                    type="text"
+                    placeholder="Search by name or ID..."
+                    value={searchTerm}
+                    onChange={handleSearch}
+                  />
+                  {searchTerm && (
+                    <button onClick={() => setSearchTerm("")}>X</button>
+                  )}
+                </div>
+              </div>
+              <button className="btn-primary" onClick={() => setShowForm(true)}>
+                + Add Customer
               </button>
             </div>
             {showForm && (

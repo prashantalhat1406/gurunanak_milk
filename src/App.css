@@ -1,0 +1,64 @@
+.toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+  align-items: center;
+}
+
+.toolbar button {
+  margin-left: auto;
+}
+
+.btn-primary {
+  padding: 9px 14px;
+  background: white;
+  color: #1976d2;
+  border: 1px solid #1976d2;
+  border-radius: 4px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #1976d2;
+  color: white;
+  box-shadow: 0 6px 14px rgba(25,118,210,0.2);
+}
+
+.search-box {
+  flex: 1;   /* 🔥 THIS makes it expand */
+}
+
+.search-box-premium {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 10px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #fff;  
+  transition: all 0.2s ease;
+}
+
+.search-box-premium .icon {
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.search-box-premium input {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 14px;
+}
+
+.search-box-premium:focus-within {
+  border-color: #1976d2;
+  /* box-shadow: 0 6px 18px rgba(25,118,210,0.15); */
+}
