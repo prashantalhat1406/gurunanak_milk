@@ -87,7 +87,7 @@ const MilkCalendarView = ({
         >
           ← Previous
         </button>
-        <h2>{monthName} {year}</h2>
+        <h2 style={{ margin: 0 }}>{monthName} {year}</h2>
         <button
           onClick={onNextMonth}
           style={{
