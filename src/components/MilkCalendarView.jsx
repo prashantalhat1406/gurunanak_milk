@@ -159,7 +159,7 @@ const MilkCalendarView = ({
               onClick={() => handleDayClick(day)}
               style={{
                 padding: '10px',
-                minHeight: '100px',
+                minHeight: '50px',
                 backgroundColor: day ? bgColor : '#f5f5f5',
                 border: day ? '1px solid #e0e0e0' : 'none',
                 borderRadius: '4px',

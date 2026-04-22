@@ -316,19 +316,22 @@ function App() {
                 isEditing={!!editingCustomer}
               />
             )}
-            <h2>Customer List ({filteredCustomers.length})</h2>
-            {filteredCustomers.map((customer) => (
-              <CustomerCard
-                key={customer.customerID}
-                customerID={customer.customerID}
-                name={customer.name}
-                mobile={customer.mobile}
-                totalMilk={customer.totalMilk}
-                totalAmount={customer.totalAmount}
-                onEdit={handleEditCustomer}
-                onClick={handleCustomerClick}
-              />
-            ))}
+            {/* <h2>Customer List ({filteredCustomers.length})</h2> */}
+            {/* <h2>Customer List</h2> */}
+            <div className="customer-list">
+              {filteredCustomers.map((customer) => (
+                <CustomerCard
+                  key={customer.customerID}
+                  customerID={customer.customerID}
+                  name={customer.name}
+                  mobile={customer.mobile}
+                  totalMilk={customer.totalMilk}
+                  totalAmount={customer.totalAmount}
+                  onEdit={handleEditCustomer}
+                  onClick={handleCustomerClick}
+                />
+              ))}
+            </div>
           </>
         ) : (
           <>
@@ -385,11 +388,12 @@ function App() {
                   ))}
                 </select>
               </div>
-              <div style={{ display: "flex", flexDirection: "row", gap: "8px" }}>
-              <h2 style={{ margin: 0 }}>{selectedCustomer?.name}</h2>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "8px" }}
+              >
+                <h2 style={{ margin: 0 }}>{selectedCustomer?.name}</h2>
+              </div>
             </div>
-            </div>
-            
 
             {(showTransactionForm || editingTransaction) && (
               <MilkTransactionForm

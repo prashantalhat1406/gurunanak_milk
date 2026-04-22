@@ -1,9 +1,10 @@
-﻿import React from 'react';
+﻿import React from "react";
+import "../styles/header-style.css";
 
 const Header = ({ name }) => {
   return (
-    <header style={{ textAlign: 'center', padding: '20px', backgroundColor: '#f0f0f0' }}>
-      <h1 style={{ margin: 0 }}>{name}</h1>
+    <header className="app-header-curved">
+      <h1>{name}</h1>
     </header>
   );
 };

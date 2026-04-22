@@ -1,0 +1,71 @@
+.customer-row-card {
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  background: #fff;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.customer-row-card.clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+}
+
+.customer-list .customer-row-card:nth-child(even) {
+  background-color: #f5f7fa;
+}
+.customer-row-card:nth-child(even) {
+  border-left: 3px solid #e0e0e0;
+}
+
+.customer-row-card:hover {
+  background-color: #eef3ff !important;
+}
+
+.row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 1.4rem;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.amount {
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.row-bottom {
+  margin-top: 6px;
+  display: flex;
+  gap: 12px;
+  font-size: 1rem;
+  color: #666;
+  flex-wrap: wrap;
+}
+
+.edit-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.edit-btn:hover {
+  opacity: 1;
+}

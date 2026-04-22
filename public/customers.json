@@ -115,5 +115,15 @@
       { "date": "2024-06-17", "quantity": 3, "rate": 50, "amount": 150 },
       { "date": "2024-06-19", "quantity": 2, "rate": 50, "amount": 100 }
     ]
+  },
+  {
+    "customerID": "C004",
+    "name": "Rahul Waghmare",
+    "mobile": "999999992",
+    "totalMilk": 60,
+    "totalAmount": 3000,
+    "milkTransactions": [
+      { "date": "2024-04-01", "quantity": 3, "rate": 50, "amount": 150 }      
+    ]
   }
 ]
