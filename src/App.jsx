@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
 import CustomerCard from "./components/CustomerCard";
-import AddCustomerForm from "./components/AddCustomerForm";
+import AddCustomerModal from "./components/AddCustomerModal";
 import MilkCard from "./components/MilkCard";
 import MilkTransactionForm from "./components/MilkTransactionForm";
 import MilkCalendarView from "./components/MilkCalendarView";
@@ -308,7 +308,7 @@ function App() {
               </button>
             </div>
             {showForm && (
-              <AddCustomerForm
+              <AddCustomerModal
                 onSubmit={handleAddCustomer}
                 onCancel={handleCancel}
                 initialName={editingCustomer?.name || ""}
