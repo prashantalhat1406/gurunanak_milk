@@ -1,5 +1,7 @@
 import "./App.css";
 import "./styles/main-style.css";
+import "./styles/detail-view.css";
+import "./styles/buttons.css";
 import { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
 import CustomerCard from "./components/CustomerCard";
@@ -7,6 +9,8 @@ import AddCustomerModal from "./components/AddCustomerModal";
 import MilkCard from "./components/MilkCard";
 import MilkTransactionForm from "./components/MilkTransactionForm";
 import MilkCalendarView from "./components/MilkCalendarView";
+import PaymentHistory from "./components/PaymentHistory";
+import AddPaymentForm from "./components/AddPaymentForm";
 import {
   loadCustomers,
   saveCustomers,
@@ -24,12 +28,19 @@ function App() {
   const [showTransactionForm, setShowTransactionForm] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState(null);
   const [transactionDate, setTransactionDate] = useState(null);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
+  const [editingPaymentIndex, setEditingPaymentIndex] = useState(null);
 
   // Load data on component mount
   useEffect(() => {
     const loadData = async () => {
       const loadedCustomers = await loadCustomers();
-      setCustomers(loadedCustomers);
+      // Ensure each customer has a payments array
+      const customersWithPayments = loadedCustomers.map((customer) => ({
+        ...customer,
+        payments: customer.payments || [],
+      }));
+      setCustomers(customersWithPayments);
     };
     loadData();
   }, []);
@@ -75,6 +86,7 @@ function App() {
         totalMilk: 0,
         totalAmount: 0,
         milkTransactions: [],
+        payments: [],
       };
       setCustomers((prev) => [...prev, newCustomer]);
     }
@@ -190,6 +202,83 @@ function App() {
           ),
       ),
     }));
+  };
+
+  // Payment handlers
+  const handleAddPaymentClick = () => {
+    setEditingPaymentIndex(null);
+    setShowPaymentForm(true);
+  };
+
+  const handleAddPayment = (paymentData) => {
+    const updatedCustomer = {
+      ...selectedCustomer,
+      payments: selectedCustomer.payments
+        ? [...selectedCustomer.payments, paymentData]
+        : [paymentData],
+    };
+
+    // Update customers list
+    setCustomers((prev) =>
+      prev.map((customer) =>
+        customer.customerID === selectedCustomer.customerID
+          ? updatedCustomer
+          : customer,
+      ),
+    );
+    setSelectedCustomer(updatedCustomer);
+    setShowPaymentForm(false);
+  };
+
+  const handleEditPayment = (paymentIndex) => {
+    setEditingPaymentIndex(paymentIndex);
+    setShowPaymentForm(true);
+  };
+
+  const handleUpdatePayment = (paymentData) => {
+    const updatedPayments = [...(selectedCustomer.payments || [])];
+    updatedPayments[editingPaymentIndex] = paymentData;
+
+    const updatedCustomer = {
+      ...selectedCustomer,
+      payments: updatedPayments,
+    };
+
+    setCustomers((prev) =>
+      prev.map((customer) =>
+        customer.customerID === selectedCustomer.customerID
+          ? updatedCustomer
+          : customer,
+      ),
+    );
+    setSelectedCustomer(updatedCustomer);
+    setShowPaymentForm(false);
+    setEditingPaymentIndex(null);
+  };
+
+  const handleDeletePayment = (paymentIndex) => {
+    const updatedPayments = (selectedCustomer.payments || []).filter(
+      (_, idx) => idx !== paymentIndex
+    );
+
+    const updatedCustomer = {
+      ...selectedCustomer,
+      payments: updatedPayments,
+    };
+
+    setCustomers((prev) =>
+      prev.map((customer) =>
+        customer.customerID === selectedCustomer.customerID
+          ? updatedCustomer
+          : customer,
+      ),
+    );
+    setSelectedCustomer(updatedCustomer);
+  };
+
+  const handleCancelPayment = () => {
+    setShowPaymentForm(false);
+    setEditingPaymentIndex(null);
   };
 
   const handlePrevMonth = () => {
@@ -345,15 +434,7 @@ function App() {
             >
               <button
                 onClick={handleBackToList}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#666",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "16px",
-                }}
+                className="back-button"
               >
                 ← Back to Customers
               </button>
@@ -405,15 +486,45 @@ function App() {
               />
             )}
 
-            <MilkCalendarView
-              transactions={filteredMilkTransactions}
-              selectedMonth={selectedMonth}
-              onPrevMonth={handlePrevMonth}
-              onNextMonth={handleNextMonth}
-              onAddTransaction={handleAddTransactionFromCalendar}
-              onEditTransaction={handleEditTransaction}
-              onDeleteTransaction={handleDeleteTransaction}
-            />
+            {showPaymentForm && (
+              <AddPaymentForm
+                selectedMonth={selectedMonth}
+                monthlyTotal={filteredMilkTransactions.reduce((sum, t) => sum + (t.amount || 0), 0)}
+                onSubmit={editingPaymentIndex !== null ? handleUpdatePayment : handleAddPayment}
+                onCancel={handleCancelPayment}
+                isEditing={editingPaymentIndex !== null}
+                initialData={
+                  editingPaymentIndex !== null
+                    ? selectedCustomer?.payments?.[editingPaymentIndex]
+                    : null
+                }
+              />
+            )}
+
+            <div className="detail-view-container">
+              <div className="calendar-section">
+                <MilkCalendarView
+                  transactions={filteredMilkTransactions}
+                  selectedMonth={selectedMonth}
+                  onPrevMonth={handlePrevMonth}
+                  onNextMonth={handleNextMonth}
+                  onAddTransaction={handleAddTransactionFromCalendar}
+                  onEditTransaction={handleEditTransaction}
+                  onDeleteTransaction={handleDeleteTransaction}
+                />
+              </div>
+
+              <div className="payment-history-section">
+                <PaymentHistory
+                  payments={selectedCustomer?.payments || []}
+                  milkTransactions={filteredMilkTransactions}
+                  selectedMonth={selectedMonth}
+                  onAdd={handleAddPaymentClick}
+                  onEdit={handleEditPayment}
+                  onDelete={handleDeletePayment}
+                />
+              </div>
+            </div>
           </>
         )}
       </main>

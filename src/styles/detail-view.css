@@ -1,0 +1,70 @@
+.detail-view-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 10px;
+  height: calc(100vh - 270px);
+  min-height: 500px;
+}
+
+.calendar-section {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-height: 0;
+}
+
+.calendar-section > div {
+  flex: 1;
+  overflow: hidden;
+}
+
+.payment-history-section {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  min-height: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .detail-view-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    min-height: 600px;
+  }
+
+  .calendar-section,
+  .payment-history-section {
+    min-height: 500px;
+  }
+}
+
+/* Scrollbar styling */
+.calendar-section > div::-webkit-scrollbar,
+.transactions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.calendar-section > div::-webkit-scrollbar-track,
+.transactions-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+}
+
+.calendar-section > div::-webkit-scrollbar-thumb,
+.transactions-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.calendar-section > div::-webkit-scrollbar-thumb:hover,
+.transactions-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
