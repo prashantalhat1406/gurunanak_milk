@@ -1,4 +1,5 @@
 import "./App.css";
+import "./styles/main-style.css";
 import { useState, useEffect, useMemo } from "react";
 import Header from "./components/Header";
 import CustomerCard from "./components/CustomerCard";
@@ -275,7 +276,7 @@ function App() {
   return (
     <>
       <Header name="GuruNanak Milk Dairy" />
-      <main style={{ padding: "20px" }}>
+      <main className="main-container">
         {viewMode === "list" ? (
           <>
             <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
