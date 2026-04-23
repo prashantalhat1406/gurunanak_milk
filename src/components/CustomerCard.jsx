@@ -15,7 +15,7 @@ const CustomerCard = ({
       className={`customer-row-card ${onClick ? "clickable" : ""}`}
       onClick={
         onClick
-          ? () => onClick({ customerID, name, mobile, totalMilk, totalAmount })
+          ? () => onClick({ id: customerID, name, mobile, totalMilk, totalAmount })
           : undefined
       }
     >
@@ -29,7 +29,7 @@ const CustomerCard = ({
               className="edit-btn"
               onClick={(e) => {
                 e.stopPropagation();
-                onEdit({ customerID, name, mobile, totalMilk, totalAmount });
+                onEdit({ id: customerID, name, mobile, totalMilk, totalAmount });
               }}
             >
               ✏️

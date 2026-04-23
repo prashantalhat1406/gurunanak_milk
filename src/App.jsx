@@ -11,11 +11,31 @@ import MilkTransactionForm from "./components/MilkTransactionForm";
 import MilkCalendarView from "./components/MilkCalendarView";
 import PaymentHistory from "./components/PaymentHistory";
 import AddPaymentForm from "./components/AddPaymentForm";
+// import {
+//   loadCustomers,
+//   saveCustomers,
+//   generateCustomerID,
+// } from "./utils/dataService";
+
 import {
   loadCustomers,
-  saveCustomers,
-  generateCustomerID,
-} from "./utils/dataService";
+  subscribeToCustomers,
+  loadTransactions,
+  subscribeToTransactions,
+  loadPayments,
+  subscribeToPayments,
+  addCustomer,
+  updateCustomer,
+  deleteCustomer,
+  addTransaction,
+  updateTransaction,
+  deleteTransaction,
+  addPayment,
+  updatePayment,
+  deletePayment,
+  getCustomerWithDetails,
+  migrateLocalDataToFirestore,
+} from './utils/dataService';
 
 function App() {
   const [customers, setCustomers] = useState([]);
@@ -31,31 +51,56 @@ function App() {
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [editingPaymentIndex, setEditingPaymentIndex] = useState(null);
 
-  // Load data on component mount
+  // Load data on component mount - Real-time listener
   useEffect(() => {
-    const loadData = async () => {
-      const loadedCustomers = await loadCustomers();
-      // Ensure each customer has a payments array
-      const customersWithPayments = loadedCustomers.map((customer) => ({
+    // Subscribe to customer updates in real-time
+    const unsubscribe = subscribeToCustomers((customersData) => {
+      const customersWithDefaults = customersData.map((customer) => ({
         ...customer,
+        milkTransactions: customer.milkTransactions || [],
         payments: customer.payments || [],
       }));
-      setCustomers(customersWithPayments);
-    };
-    loadData();
+      setCustomers(customersWithDefaults);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
   }, []);
 
-  // Save data whenever customers change
+  // Subscribe to transaction and payment updates when customer is selected
   useEffect(() => {
-    if (customers.length > 0) {
-      saveCustomers(customers);
+    if (selectedCustomer?.id) {
+      const unsubscribeTransactions = subscribeToTransactions(
+        selectedCustomer.id,
+        (transactions) => {
+          setSelectedCustomer((prev) => ({
+            ...prev,
+            milkTransactions: transactions,
+          }));
+        }
+      );
+
+      const unsubscribePayments = subscribeToPayments(
+        selectedCustomer.id,
+        (payments) => {
+          setSelectedCustomer((prev) => ({
+            ...prev,
+            payments: payments,
+          }));
+        }
+      );
+
+      return () => {
+        unsubscribeTransactions();
+        unsubscribePayments();
+      };
     }
-  }, [customers]);
+  }, [selectedCustomer?.id]);
 
   const filteredCustomers = customers.filter(
     (customer) =>
       customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      customer.customerID.toLowerCase().includes(searchTerm.toLowerCase()),
+      (customer.id && customer.id.toLowerCase().includes(searchTerm.toLowerCase())),
   );
 
   const handleSearch = (e) => setSearchTerm(e.target.value);
@@ -68,30 +113,21 @@ function App() {
     return () => clearTimeout(delay);
   }, [searchTerm]);
 
-  const handleAddCustomer = (customerData) => {
-    if (editingCustomer) {
-      // Update existing customer
-      setCustomers((prev) =>
-        prev.map((customer) =>
-          customer.customerID === editingCustomer.customerID
-            ? { ...customer, ...customerData }
-            : customer,
-        ),
-      );
-    } else {
-      // Add new customer
-      const newCustomer = {
-        customerID: generateCustomerID(customers),
-        ...customerData,
-        totalMilk: 0,
-        totalAmount: 0,
-        milkTransactions: [],
-        payments: [],
-      };
-      setCustomers((prev) => [...prev, newCustomer]);
+  const handleAddCustomer = async (customerData) => {
+    try {
+      if (editingCustomer) {
+        // Update existing customer
+        await updateCustomer(editingCustomer.id, customerData);
+      } else {
+        // Add new customer to Firebase
+        await addCustomer(customerData);
+      }
+      setShowForm(false);
+      setEditingCustomer(null);
+    } catch (error) {
+      console.error("Error saving customer:", error);
+      alert("Failed to save customer. Please try again.");
     }
-    setShowForm(false);
-    setEditingCustomer(null);
   };
 
   const handleEditCustomer = (customer) => {
@@ -99,17 +135,34 @@ function App() {
     setShowForm(true);
   };
 
+  const handleDeleteCustomer = async (customerId) => {
+    if (window.confirm("Are you sure you want to delete this customer and all their records?")) {
+      try {
+        await deleteCustomer(customerId);
+        setViewMode("list");
+        setSelectedCustomer(null);
+      } catch (error) {
+        console.error("Error deleting customer:", error);
+        alert("Failed to delete customer. Please try again.");
+      }
+    }
+  };
+
   const handleCancel = () => {
     setShowForm(false);
     setEditingCustomer(null);
   };
 
-  const handleCustomerClick = (customer) => {
-    const fullCustomer = customers.find(
-      (c) => c.customerID === customer.customerID,
-    );
-    setSelectedCustomer(fullCustomer);
-    setViewMode("detail");
+  const handleCustomerClick = async (customer) => {
+    try {
+      // Load full customer details with transactions and payments
+      const fullCustomer = await getCustomerWithDetails(customer.id);
+      setSelectedCustomer(fullCustomer);
+      setViewMode("detail");
+    } catch (error) {
+      console.error("Error loading customer details:", error);
+      alert("Failed to load customer details. Please try again.");
+    }
   };
 
   const handleBackToList = () => {
@@ -117,47 +170,31 @@ function App() {
     setSelectedCustomer(null);
   };
 
-  const handleAddTransaction = (transactionData) => {
-    let updatedCustomer;
-    if (editingTransaction) {
-      // Update existing transaction
-      updatedCustomer = {
-        ...selectedCustomer,
-        milkTransactions: selectedCustomer.milkTransactions.map(
-          (transaction) =>
-            transaction.date === editingTransaction.date &&
-            transaction.quantity === editingTransaction.quantity
-              ? transactionData
-              : transaction,
-        ),
-      };
-    } else {
-      // Add new transaction
-      updatedCustomer = {
-        ...selectedCustomer,
-        milkTransactions: [
-          ...selectedCustomer.milkTransactions,
-          transactionData,
-        ],
-      };
-      // Auto-navigate to the newly added transaction's month
-      const transactionMonth = transactionData.date.substring(0, 7);
-      setSelectedMonth(transactionMonth);
+  const handleAddTransaction = async (transactionData) => {
+    try {
+      if (editingTransaction) {
+        // Update existing transaction
+        await updateTransaction(
+          editingTransaction.id,
+          selectedCustomer.id,
+          transactionData
+        );
+      } else {
+        // Add new transaction
+        await addTransaction(selectedCustomer.id, transactionData);
+
+        // Auto-navigate to the newly added transaction's month
+        const transactionMonth = transactionData.date.substring(0, 7);
+        setSelectedMonth(transactionMonth);
+      }
+
+      setShowTransactionForm(false);
+      setEditingTransaction(null);
+      setTransactionDate(null);
+    } catch (error) {
+      console.error("Error saving transaction:", error);
+      alert("Failed to save transaction. Please try again.");
     }
-
-    // Update both customers list and selectedCustomer
-    setCustomers((prev) =>
-      prev.map((customer) =>
-        customer.customerID === selectedCustomer.customerID
-          ? updatedCustomer
-          : customer,
-      ),
-    );
-    setSelectedCustomer(updatedCustomer);
-
-    setShowTransactionForm(false);
-    setEditingTransaction(null);
-    setTransactionDate(null);
   };
 
   const handleEditTransaction = (transaction) => {
@@ -171,37 +208,19 @@ function App() {
     setTransactionDate(null);
   };
 
-  const handleDeleteTransaction = (transaction) => {
-    setCustomers((prev) =>
-      prev.map((customer) =>
-        customer.customerID === selectedCustomer.customerID
-          ? {
-              ...customer,
-              milkTransactions: customer.milkTransactions.filter(
-                (t) =>
-                  !(
-                    t.date === transaction.date &&
-                    t.quantity === transaction.quantity &&
-                    t.rate === transaction.rate
-                  ),
-              ),
-            }
-          : customer,
-      ),
-    );
-
-    // Update selectedCustomer as well
-    setSelectedCustomer((prev) => ({
-      ...prev,
-      milkTransactions: prev.milkTransactions.filter(
-        (t) =>
-          !(
-            t.date === transaction.date &&
-            t.quantity === transaction.quantity &&
-            t.rate === transaction.rate
-          ),
-      ),
-    }));
+  const handleDeleteTransaction = async (transaction) => {
+    if (window.confirm("Are you sure you want to delete this transaction?")) {
+      try {
+        await deleteTransaction(
+          transaction.id,
+          selectedCustomer.id,
+          transaction
+        );
+      } catch (error) {
+        console.error("Error deleting transaction:", error);
+        alert("Failed to delete transaction. Please try again.");
+      }
+    }
   };
 
   // Payment handlers
@@ -210,24 +229,14 @@ function App() {
     setShowPaymentForm(true);
   };
 
-  const handleAddPayment = (paymentData) => {
-    const updatedCustomer = {
-      ...selectedCustomer,
-      payments: selectedCustomer.payments
-        ? [...selectedCustomer.payments, paymentData]
-        : [paymentData],
-    };
-
-    // Update customers list
-    setCustomers((prev) =>
-      prev.map((customer) =>
-        customer.customerID === selectedCustomer.customerID
-          ? updatedCustomer
-          : customer,
-      ),
-    );
-    setSelectedCustomer(updatedCustomer);
-    setShowPaymentForm(false);
+  const handleAddPayment = async (paymentData) => {
+    try {
+      await addPayment(selectedCustomer.id, paymentData);
+      setShowPaymentForm(false);
+    } catch (error) {
+      console.error("Error adding payment:", error);
+      alert("Failed to add payment. Please try again.");
+    }
   };
 
   const handleEditPayment = (paymentIndex) => {
@@ -235,45 +244,28 @@ function App() {
     setShowPaymentForm(true);
   };
 
-  const handleUpdatePayment = (paymentData) => {
-    const updatedPayments = [...(selectedCustomer.payments || [])];
-    updatedPayments[editingPaymentIndex] = paymentData;
-
-    const updatedCustomer = {
-      ...selectedCustomer,
-      payments: updatedPayments,
-    };
-
-    setCustomers((prev) =>
-      prev.map((customer) =>
-        customer.customerID === selectedCustomer.customerID
-          ? updatedCustomer
-          : customer,
-      ),
-    );
-    setSelectedCustomer(updatedCustomer);
-    setShowPaymentForm(false);
-    setEditingPaymentIndex(null);
+  const handleUpdatePayment = async (paymentData) => {
+    try {
+      const payment = selectedCustomer.payments[editingPaymentIndex];
+      await updatePayment(payment.id, selectedCustomer.id, paymentData);
+      setShowPaymentForm(false);
+      setEditingPaymentIndex(null);
+    } catch (error) {
+      console.error("Error updating payment:", error);
+      alert("Failed to update payment. Please try again.");
+    }
   };
 
-  const handleDeletePayment = (paymentIndex) => {
-    const updatedPayments = (selectedCustomer.payments || []).filter(
-      (_, idx) => idx !== paymentIndex
-    );
-
-    const updatedCustomer = {
-      ...selectedCustomer,
-      payments: updatedPayments,
-    };
-
-    setCustomers((prev) =>
-      prev.map((customer) =>
-        customer.customerID === selectedCustomer.customerID
-          ? updatedCustomer
-          : customer,
-      ),
-    );
-    setSelectedCustomer(updatedCustomer);
+  const handleDeletePayment = async (paymentIndex) => {
+    if (window.confirm("Are you sure you want to delete this payment?")) {
+      try {
+        const payment = selectedCustomer.payments[paymentIndex];
+        await deletePayment(payment.id, selectedCustomer.id, payment);
+      } catch (error) {
+        console.error("Error deleting payment:", error);
+        alert("Failed to delete payment. Please try again.");
+      }
+    }
   };
 
   const handleCancelPayment = () => {
@@ -410,8 +402,8 @@ function App() {
             <div className="customer-list">
               {filteredCustomers.map((customer) => (
                 <CustomerCard
-                  key={customer.customerID}
-                  customerID={customer.customerID}
+                  key={customer.id}
+                  customerID={customer.id}
                   name={customer.name}
                   mobile={customer.mobile}
                   totalMilk={customer.totalMilk}
