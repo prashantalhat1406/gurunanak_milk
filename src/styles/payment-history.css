@@ -192,10 +192,8 @@
   font-size: 14px;
 }
 
-.payment-row .mode-badge {
-  background: #e8f5e9;
-  color: #2e7d32;
-  padding: 2px 8px;
+.payment-row .mode-badge {  
+  color: #2e7d32;  
   border-radius: 4px;
   font-weight: 600;
   font-size: 12px;

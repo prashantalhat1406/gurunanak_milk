@@ -1,11 +1,11 @@
-﻿import React, { useState, useEffect } from 'react';
-import '../styles/milk-transaction-form.css';
+﻿import React, { useState, useEffect } from "react";
+import "../styles/milk-transaction-form.css";
 
 const MilkTransactionForm = ({
   onSubmit,
   onCancel,
-  initialDate = '',
-  initialQuantity = '',
+  initialDate = "",
+  initialQuantity = "",
   isEditing = false,
 }) => {
   const [date, setDate] = useState(initialDate);
@@ -28,31 +28,31 @@ const MilkTransactionForm = ({
     if (checked) {
       setQuantity(0);
     } else {
-      setQuantity('0.5');
+      setQuantity("0.5");
     }
-    if (errors.quantity) setErrors({ ...errors, quantity: '' });
+    if (errors.quantity) setErrors({ ...errors, quantity: "" });
   };
 
   const handleQuantityChange = (e) => {
     const value = e.target.value;
     setQuantity(value);
-    if (errors.quantity) setErrors({ ...errors, quantity: '' });
+    if (errors.quantity) setErrors({ ...errors, quantity: "" });
   };
 
   const handleDateChange = (e) => {
     setDate(e.target.value);
-    if (errors.date) setErrors({ ...errors, date: '' });
+    if (errors.date) setErrors({ ...errors, date: "" });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = {};
 
-    if (!date) newErrors.date = 'Date is required';
-    
+    if (!date) newErrors.date = "Date is required";
+
     const qty = isNoMilkDay ? 0 : parseFloat(quantity);
     if (!isNoMilkDay && (!quantity || qty < 0)) {
-      newErrors.quantity = 'Valid quantity is required';
+      newErrors.quantity = "Valid quantity is required";
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -64,8 +64,8 @@ const MilkTransactionForm = ({
     onSubmit({ date, quantity: qty, rate: MILK_RATE, amount });
 
     if (!isEditing) {
-      setDate('');
-      setQuantity('');
+      setDate("");
+      setQuantity("");
       setIsNoMilkDay(false);
     }
     setErrors({});
@@ -73,16 +73,16 @@ const MilkTransactionForm = ({
 
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         onCancel();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onCancel]);
 
-  const displayQuantity = isNoMilkDay ? 0 : (quantity ? parseFloat(quantity) : 0);
+  const displayQuantity = isNoMilkDay ? 0 : quantity ? parseFloat(quantity) : 0;
   const displayAmount = (displayQuantity * MILK_RATE).toFixed(2);
 
   return (
@@ -97,13 +97,11 @@ const MilkTransactionForm = ({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="mtf-header">
-          <div className="mtf-title-section">
-            <span className="mtf-icon">🥛</span>
-            <h2 id="mtf-title" className="mtf-title">
-              {isEditing ? 'Edit Milk Transaction' : 'Add Milk Transaction'}
-            </h2>
-          </div>
+        {/* <div className="mtf-header"> */}
+        <div className="mtf-title-section">          
+          <h2 id="mtf-title" className="mtf-title">
+            {isEditing ? "Edit Milk" : "Add Milk"}
+          </h2>
           <button
             id="mtf-close-btn"
             className="mtf-close-btn"
@@ -113,24 +111,52 @@ const MilkTransactionForm = ({
             ×
           </button>
         </div>
+        {/* </div> */}
 
         {/* Form */}
-        <form id="milk-transaction-form" onSubmit={handleSubmit} className="mtf-form">
+        <form
+          id="milk-transaction-form"
+          onSubmit={handleSubmit}
+          className="mtf-form"
+        >
           {/* Date Field */}
-          <div className="mtf-form-group">
-            <label htmlFor="mtf-date-input">📅 Date</label>
-            <div className="mtf-input-wrapper">
-              <input
-                id="mtf-date-input"
-                type="date"
-                className={`mtf-input ${errors.date ? 'mtf-input--error' : ''}`}
-                value={date}
-                onChange={handleDateChange}
-              />
-              <span className="mtf-input-icon">📆</span>
+          <div className="mtf-row">
+            <div className="mtf-form-group">
+              <label htmlFor="mtf-date-input">Date</label>
+              <div className="mtf-input-wrapper">
+                <input
+                  id="mtf-date-input"
+                  type="date"
+                  className={`mtf-input ${errors.date ? "mtf-input--error" : ""}`}
+                  value={date}
+                  onChange={handleDateChange}
+                />
+                {/* <span className="mtf-input-icon">📆</span> */}
+              </div>
+              {errors.date && (
+                <span className="mtf-error-message">{errors.date}</span>
+              )}
             </div>
-            {errors.date && (
-              <span className="mtf-error-message">{errors.date}</span>
+            {!isNoMilkDay && (
+              <div className="mtf-form-group">
+                <label htmlFor="mtf-quantity-input">Quantity (Ltr)</label>
+                <div className="mtf-input-wrapper">
+                  <input
+                    id="mtf-quantity-input"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    className={`mtf-input ${errors.quantity ? "mtf-input--error" : ""}`}
+                    value={quantity}
+                    onChange={handleQuantityChange}
+                    placeholder="0.5"
+                  />
+                  {/* <span className="mtf-input-icon">⚖️</span> */}
+                </div>
+                {errors.quantity && (
+                  <span className="mtf-error-message">{errors.quantity}</span>
+                )}
+              </div>
             )}
           </div>
 
@@ -144,32 +170,11 @@ const MilkTransactionForm = ({
                 checked={isNoMilkDay}
                 onChange={handleNoMilkDayChange}
               />
-              <span className="mtf-checkbox-label">No Milk Day (₹0)</span>
+              <span className="mtf-checkbox-label">No Milk Day</span>
             </label>
           </div>
 
           {/* Quantity Field */}
-          {!isNoMilkDay && (
-            <div className="mtf-form-group">
-              <label htmlFor="mtf-quantity-input">🥤 Quantity (Liters)</label>
-              <div className="mtf-input-wrapper">
-                <input
-                  id="mtf-quantity-input"
-                  type="number"
-                  min="0"
-                  step="0.5"
-                  className={`mtf-input ${errors.quantity ? 'mtf-input--error' : ''}`}
-                  value={quantity}
-                  onChange={handleQuantityChange}
-                  placeholder="0.5"
-                />
-                <span className="mtf-input-icon">⚖️</span>
-              </div>
-              {errors.quantity && (
-                <span className="mtf-error-message">{errors.quantity}</span>
-              )}
-            </div>
-          )}
 
           {/* Summary */}
           <div className="mtf-summary">
@@ -201,9 +206,9 @@ const MilkTransactionForm = ({
             <button
               id="mtf-submit-btn"
               type="submit"
-              className={`mtf-btn mtf-btn--primary ${isEditing ? 'mtf-btn--edit' : ''}`}
+              className={`mtf-btn mtf-btn--primary ${isEditing ? "mtf-btn--edit" : ""}`}
             >
-              <span>{isEditing ? '✏️ Update' : '➕ Add'} Transaction</span>
+              <span>{isEditing ? "Update" : "Add"} Milk</span>
             </button>
           </div>
         </form>
