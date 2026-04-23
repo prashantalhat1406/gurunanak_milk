@@ -1,0 +1,231 @@
+/* =========================
+   Container
+========================= */
+
+.mcal-container {
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================
+   Navigation
+========================= */
+
+.mcal-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.mcal-month-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  transition: background 0.2s;
+}
+
+.mcal-month-title:hover {
+  background: #e0e0e0;
+}
+
+/* Month picker */
+.mcal-month-picker {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 6px;
+  background: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  z-index: 10;
+}
+
+/* =========================
+   Grid
+========================= */
+
+.mcal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+  background: #f0f0f0;
+  padding: 6px;
+  border-radius: 6px;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* =========================
+   Headers
+========================= */
+
+.mcal-header {
+  padding: 4px 2px;
+  text-align: center;
+  font-weight: bold;
+  background: #333;
+  color: white;
+  border-radius: 3px;
+  font-size: 11px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* =========================
+   Cells
+========================= */
+
+.mcal-cell {
+  padding: 3px;
+  border-radius: 3px;
+  border: 1px solid #e0e0e0;
+  min-height: 35px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  background: #fff;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
+}
+
+.mcal-cell:hover {
+  background: #f9f9f9;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+.mcal-cell-empty {
+  background: #f5f5f5;
+  border: none;
+  cursor: default;
+}
+
+/* =========================
+   States
+========================= */
+
+.mcal-cell-milk {
+  background: #e8f5e9;
+}
+
+.mcal-cell-no-milk {
+  background: #fff3e0;
+}
+
+/* =========================
+   Content
+========================= */
+
+/* .mcal-day {
+  font-weight: bold;
+  font-size: 13px;
+} */
+
+.mcal-day {
+  position: absolute;
+  top: 3px;
+  left: 4px;
+
+  font-weight: bold;
+  font-size: 13px;
+}
+/* 
+.mcal-today {
+  border: 2px solid #42a5f5;
+  background: #e3f2fd !important;
+  position: relative;
+}
+
+.mcal-today::after {
+  content: "Today";
+  position: absolute;
+  top: 2px;
+  right: 4px;
+  font-size: 8px;
+  background: #42a5f5;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 3px;
+} */
+
+.mcal-cell {
+  position: relative;
+}
+
+.mcal-today-badge {
+  position: absolute;
+  top: 2px;
+  right: 4px;
+
+  font-size: 8px;
+  background: #42a5f5;
+  color: white;
+
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+
+
+/* .mcal-data {
+  font-size: 10px;
+  text-align: right;
+  line-height: 1.1;
+} */
+
+.mcal-data {
+  position: absolute;
+  bottom: 3px;
+  right: 4px;
+
+  text-align: right;
+  font-size: 10px;
+  line-height: 1.1;
+}
+
+.mcal-cell-milk {
+  background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+  border-left: 3px solid #2e7d32;
+}
+
+.mcal-no-milk {
+  font-size: 10px;
+  color: #ff9800;
+  font-weight: bold;
+}
+.mcal-cell-no-milk {
+  background: linear-gradient(135deg, #fff3e0, #fff8e1);
+  border-left: 3px solid #ff9800;
+}
+
+/* stronger card-style emphasis */
+.mcal-qty {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1b5e20;
+}
+
+.mcal-amount {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0d47a1;
+}
