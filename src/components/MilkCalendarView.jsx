@@ -7,11 +7,13 @@ const MilkCalendarView = ({
   selectedMonth, 
   onNextMonth, 
   onPrevMonth,
+  onMonthChange,
   onAddTransaction,
   onEditTransaction,
   onDeleteTransaction
 }) => {
   const [selectedDate, setSelectedDate] = useState(null);
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
 
   // Parse the month (format: YYYY-MM)
   const [year, month] = selectedMonth.split('-').map(Number);
@@ -87,7 +89,62 @@ const MilkCalendarView = ({
         >
           ←
         </button>
-        <h2 style={{ margin: 0, fontSize: '16px', fontWeight: 'bold' }}>{monthName} {year}</h2>
+        <div style={{ position: 'relative' }}>
+          <h2 
+            onClick={() => setShowMonthPicker(!showMonthPicker)}
+            style={{ 
+              margin: 0, 
+              fontSize: '16px', 
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              padding: '6px 12px',
+              borderRadius: '4px',
+              backgroundColor: '#f0f0f0',
+              transition: 'background-color 0.2s'
+            }}
+            onMouseEnter={(e) => e.target.style.backgroundColor = '#e0e0e0'}
+            onMouseLeave={(e) => e.target.style.backgroundColor = '#f0f0f0'}
+          >
+            {monthName} {year}
+          </h2>
+          
+          {/* Month Picker */}
+          {showMonthPicker && (
+            <div style={{
+              position: 'absolute',
+              top: '100%',
+              left: 0,
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              padding: '12px',
+              boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+              zIndex: 100,
+              marginTop: '4px',
+              minWidth: '200px'
+            }}>
+              <input
+                type="month"
+                value={selectedMonth}
+                onChange={(e) => {
+                  if (onMonthChange) {
+                    onMonthChange(e.target.value);
+                  }
+                  setShowMonthPicker(false);
+                }}
+                autoFocus
+                style={{
+                  width: '100%',
+                  padding: '8px',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+          )}
+        </div>
         <button
           onClick={onNextMonth}
           className="nav-button"

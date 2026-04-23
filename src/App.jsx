@@ -420,8 +420,8 @@ function App() {
               style={{
                 marginBottom: "10px",
                 display: "flex",
-                gap: "65px",
-                alignItems: "flex-start",
+                gap: "20px",
+                alignItems: "center",
               }}
             >
               <button
@@ -431,36 +431,6 @@ function App() {
                 ← Back to Customers
               </button>
 
-              <div
-                style={{ display: "flex", gap: "10px", alignItems: "center" }}
-              >
-                <label
-                  style={{
-                    marginRight: "5px",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Month:
-                </label>
-                <select
-                  value={selectedMonth}
-                  onChange={(e) => setSelectedMonth(e.target.value)}
-                  style={{
-                    padding: "10px 10px",
-                    border: "1px solid #ccc",
-                    borderRadius: "4px",
-                    fontSize: "14px",
-                    width: "150px",
-                  }}
-                >
-                  {months.map((month) => (
-                    <option key={month.value} value={month.value}>
-                      {month.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
               <div
                 style={{ display: "flex", flexDirection: "row", gap: "8px" }}
               >
@@ -500,6 +470,7 @@ function App() {
                   selectedMonth={selectedMonth}
                   onPrevMonth={handlePrevMonth}
                   onNextMonth={handleNextMonth}
+                  onMonthChange={setSelectedMonth}
                   onAddTransaction={handleAddTransactionFromCalendar}
                   onEditTransaction={handleEditTransaction}
                   onDeleteTransaction={handleDeleteTransaction}

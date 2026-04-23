@@ -1,14 +1,25 @@
 ﻿import React, { useState, useEffect } from 'react';
+import '../styles/milk-transaction-form.css';
 
-const MilkTransactionForm = ({ onSubmit, onCancel, initialDate = '', initialQuantity = '', isEditing = false }) => {
+const MilkTransactionForm = ({
+  onSubmit,
+  onCancel,
+  initialDate = '',
+  initialQuantity = '',
+  isEditing = false,
+}) => {
   const [date, setDate] = useState(initialDate);
   const [quantity, setQuantity] = useState(initialQuantity);
   const [isNoMilkDay, setIsNoMilkDay] = useState(initialQuantity === 0);
+  const [errors, setErrors] = useState({});
+
+  const MILK_RATE = 50;
 
   useEffect(() => {
     setDate(initialDate);
     setQuantity(initialQuantity);
     setIsNoMilkDay(initialQuantity === 0);
+    setErrors({});
   }, [initialDate, initialQuantity]);
 
   const handleNoMilkDayChange = (e) => {
@@ -17,136 +28,182 @@ const MilkTransactionForm = ({ onSubmit, onCancel, initialDate = '', initialQuan
     if (checked) {
       setQuantity(0);
     } else {
-      setQuantity(0.5);
+      setQuantity('0.5');
     }
+    if (errors.quantity) setErrors({ ...errors, quantity: '' });
+  };
+
+  const handleQuantityChange = (e) => {
+    const value = e.target.value;
+    setQuantity(value);
+    if (errors.quantity) setErrors({ ...errors, quantity: '' });
+  };
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value);
+    if (errors.date) setErrors({ ...errors, date: '' });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (date) {
-      const rate = 50; // Fixed rate
-      const qty = isNoMilkDay ? 0 : parseFloat(quantity);
-      if (qty >= 0) {
-        const amount = qty * rate;
-        onSubmit({ date, quantity: qty, rate, amount });
-        if (!isEditing) {
-          setDate('');
-          setQuantity('');
-          setIsNoMilkDay(false);
-        }
-      }
+    const newErrors = {};
+
+    if (!date) newErrors.date = 'Date is required';
+    
+    const qty = isNoMilkDay ? 0 : parseFloat(quantity);
+    if (!isNoMilkDay && (!quantity || qty < 0)) {
+      newErrors.quantity = 'Valid quantity is required';
     }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const amount = qty * MILK_RATE;
+    onSubmit({ date, quantity: qty, rate: MILK_RATE, amount });
+
+    if (!isEditing) {
+      setDate('');
+      setQuantity('');
+      setIsNoMilkDay(false);
+    }
+    setErrors({});
   };
 
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
+
+  const displayQuantity = isNoMilkDay ? 0 : (quantity ? parseFloat(quantity) : 0);
+  const displayAmount = (displayQuantity * MILK_RATE).toFixed(2);
+
   return (
-    <div style={{
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      zIndex: 1001
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '30px',
-        maxWidth: '500px',
-        width: '90%',
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-      }}>
-        <h3 style={{ marginTop: 0 }}>{isEditing ? 'Edit Milk Transaction' : 'Add Milk Transaction'}</h3>
-        <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Date:</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '4px',
-                boxSizing: 'border-box',
-                fontSize: '16px'
-              }}
-            />
+    <div
+      id="milk-transaction-modal-overlay"
+      className="mtf-overlay"
+      onClick={onCancel}
+    >
+      <div
+        id="milk-transaction-modal-card"
+        className="mtf-card"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="mtf-header">
+          <div className="mtf-title-section">
+            <span className="mtf-icon">🥛</span>
+            <h2 id="mtf-title" className="mtf-title">
+              {isEditing ? 'Edit Milk Transaction' : 'Add Milk Transaction'}
+            </h2>
           </div>
-          <div style={{ marginBottom: '15px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+          <button
+            id="mtf-close-btn"
+            className="mtf-close-btn"
+            onClick={onCancel}
+            aria-label="Close modal"
+          >
+            ×
+          </button>
+        </div>
+
+        {/* Form */}
+        <form id="milk-transaction-form" onSubmit={handleSubmit} className="mtf-form">
+          {/* Date Field */}
+          <div className="mtf-form-group">
+            <label htmlFor="mtf-date-input">📅 Date</label>
+            <div className="mtf-input-wrapper">
               <input
+                id="mtf-date-input"
+                type="date"
+                className={`mtf-input ${errors.date ? 'mtf-input--error' : ''}`}
+                value={date}
+                onChange={handleDateChange}
+              />
+              <span className="mtf-input-icon">📆</span>
+            </div>
+            {errors.date && (
+              <span className="mtf-error-message">{errors.date}</span>
+            )}
+          </div>
+
+          {/* No Milk Day Checkbox */}
+          <div className="mtf-form-group">
+            <label className="mtf-checkbox-group">
+              <input
+                id="mtf-no-milk-day-checkbox"
                 type="checkbox"
+                className="mtf-checkbox"
                 checked={isNoMilkDay}
                 onChange={handleNoMilkDayChange}
-                style={{ cursor: 'pointer', width: '18px', height: '18px' }}
               />
-              <span style={{ fontWeight: 'bold', cursor: 'pointer' }}>No Milk Day</span>
+              <span className="mtf-checkbox-label">No Milk Day (₹0)</span>
             </label>
-            {!isNoMilkDay && (
-              <>
-                <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>Quantity (Liters):</label>
+          </div>
+
+          {/* Quantity Field */}
+          {!isNoMilkDay && (
+            <div className="mtf-form-group">
+              <label htmlFor="mtf-quantity-input">🥤 Quantity (Liters)</label>
+              <div className="mtf-input-wrapper">
                 <input
+                  id="mtf-quantity-input"
                   type="number"
                   min="0"
                   step="0.5"
+                  className={`mtf-input ${errors.quantity ? 'mtf-input--error' : ''}`}
                   value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '10px',
-                    border: '1px solid #ccc',
-                    borderRadius: '4px',
-                    boxSizing: 'border-box',
-                    fontSize: '16px'
-                  }}
+                  onChange={handleQuantityChange}
+                  placeholder="0.5"
                 />
-              </>
-            )}
+                <span className="mtf-input-icon">⚖️</span>
+              </div>
+              {errors.quantity && (
+                <span className="mtf-error-message">{errors.quantity}</span>
+              )}
+            </div>
+          )}
+
+          {/* Summary */}
+          <div className="mtf-summary">
+            <div className="mtf-summary-row">
+              <span>Rate:</span>
+              <span>₹{MILK_RATE}/L</span>
+            </div>
+            <div className="mtf-summary-row">
+              <span>Quantity:</span>
+              <span>{displayQuantity} L</span>
+            </div>
+            <div className="mtf-summary-row">
+              <span>Amount:</span>
+              <span>₹{displayAmount}</span>
+            </div>
           </div>
-          <div style={{ marginBottom: '20px', backgroundColor: '#f5f5f5', padding: '10px', borderRadius: '4px', color: '#333' }}>
-            <div>Rate: ₹50/L</div>
-            <div style={{ fontWeight: 'bold' }}>Amount: ₹{quantity ? (parseFloat(quantity) * 50).toFixed(2) : '0.00'}</div>
-          </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+
+          {/* Actions */}
+          <div className="mtf-actions">
             <button
-              type="submit"
-              style={{
-                flex: 1,
-                padding: '12px',
-                backgroundColor: isEditing ? '#ff9800' : '#4CAF50',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '16px'
-              }}
-            >
-              {isEditing ? 'Update Transaction' : 'Add Transaction'}
-            </button>
-            <button
+              id="mtf-cancel-btn"
               type="button"
+              className="mtf-btn mtf-btn--secondary"
               onClick={onCancel}
-              style={{
-                flex: 1,
-                padding: '12px',
-                backgroundColor: '#f44336',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '16px'
-              }}
             >
-              Cancel
+              <span>Cancel</span>
+            </button>
+
+            <button
+              id="mtf-submit-btn"
+              type="submit"
+              className={`mtf-btn mtf-btn--primary ${isEditing ? 'mtf-btn--edit' : ''}`}
+            >
+              <span>{isEditing ? '✏️ Update' : '➕ Add'} Transaction</span>
             </button>
           </div>
         </form>

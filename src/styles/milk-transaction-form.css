@@ -1,0 +1,290 @@
+/* ============================================
+   Milk Transaction Form - Modern UI
+   ============================================ */
+
+/* Overlay */
+.mtf-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  backdrop-filter: blur(4px);
+}
+
+/* Card */
+.mtf-card {
+  width: 100%;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Header */
+.mtf-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.mtf-title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mtf-icon {
+  font-size: 24px;
+}
+
+.mtf-title {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.mtf-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  color: #666;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mtf-close-btn:hover {
+  opacity: 1;
+}
+
+/* Form */
+.mtf-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Group */
+.mtf-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mtf-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Input Wrapper */
+.mtf-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.mtf-input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  color: #333;
+}
+
+.mtf-input:focus {
+  background: #fff;
+  border-color: #42a5f5;
+  box-shadow: 0 0 0 4px rgba(66, 165, 245, 0.1);
+}
+
+.mtf-input--error {
+  border-color: #f44336;
+  background: #ffebee;
+}
+
+.mtf-input--error:focus {
+  box-shadow: 0 0 0 4px rgba(244, 67, 54, 0.1);
+}
+
+.mtf-input-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 16px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* Error Message */
+.mtf-error-message {
+  font-size: 12px;
+  color: #f44336;
+  margin-top: 4px;
+}
+
+/* Checkbox */
+.mtf-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.mtf-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #42a5f5;
+}
+
+.mtf-checkbox-label {
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+/* Summary Box */
+.mtf-summary {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #42a5f5;
+  margin: 8px 0;
+}
+
+.mtf-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #1565c0;
+}
+
+.mtf-summary-row:last-child {
+  margin-bottom: 0;
+  font-weight: 600;
+  font-size: 15px;
+  color: #0d47a1;
+}
+
+/* Actions */
+.mtf-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.mtf-btn {
+  flex: 1;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.mtf-btn--primary {
+  background: linear-gradient(135deg, #42a5f5 0%, #1976d2 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+}
+
+.mtf-btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(66, 165, 245, 0.4);
+}
+
+.mtf-btn--primary:active {
+  transform: translateY(0);
+}
+
+.mtf-btn--primary.mtf-btn--edit {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+}
+
+.mtf-btn--primary.mtf-btn--edit:hover {
+  box-shadow: 0 6px 16px rgba(255, 152, 0, 0.4);
+}
+
+.mtf-btn--secondary {
+  background: #f5f5f5;
+  color: #333;
+  border: 1.5px solid #e0e0e0;
+}
+
+.mtf-btn--secondary:hover {
+  background: #eeeeee;
+  border-color: #bdbdbd;
+  transform: translateY(-2px);
+}
+
+.mtf-btn--secondary:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .mtf-card {
+    max-width: 90vw;
+    padding: 20px;
+  }
+
+  .mtf-title {
+    font-size: 1.1rem;
+  }
+
+  .mtf-actions {
+    flex-direction: column;
+  }
+
+  .mtf-btn {
+    padding: 10px 16px;
+  }
+}
