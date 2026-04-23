@@ -260,12 +260,26 @@
 .btn-delete {
   background: #ffebee;
   color: #d32f2f;
+  
 }
 
 .btn-delete:hover {
   background: #d32f2f;
   color: white;
   box-shadow: 0 2px 6px rgba(211, 47, 47, 0.3);
+}
+
+/* Danger (Delete / Confirm destructive) */
+.btn.danger {
+  background: #ef4444;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/* Secondary (Cancel) */
+.btn.secondary {
+  background: #f1f5f9;
+  color: #334155;
 }
 
 .payment-history-footer {
@@ -315,4 +329,37 @@
 
 .transactions-list::-webkit-scrollbar-thumb:hover {
   background: #999;
+}
+
+.confirm-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 4px;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 30px;  
+}
+
+.modal-title.danger {
+  color: #dc2626; /* red tone */
+}
+
+.title-icon {
+  font-size: 18px;
+}
+
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
 }
