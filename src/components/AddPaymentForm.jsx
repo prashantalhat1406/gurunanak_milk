@@ -1,37 +1,46 @@
-import React, { useState } from 'react';
-import '../styles/add-payment-form.css';
+import React, { useState } from "react";
+import "../styles/add-payment-form.css";
 
-const AddPaymentForm = ({ selectedMonth, monthlyTotal, onSubmit, onCancel, isEditing, initialData }) => {
-  const [date, setDate] = useState(initialData?.date || new Date().toISOString().split('T')[0]);
-  const [amount, setAmount] = useState(initialData?.amount || '');
-  const [mode, setMode] = useState(initialData?.mode || 'cash');
-  const [notes, setNotes] = useState(initialData?.notes || '');
-  const [error, setError] = useState('');
+const AddPaymentForm = ({
+  selectedMonth,
+  monthlyTotal,
+  onSubmit,
+  onCancel,
+  isEditing,
+  initialData,
+}) => {
+  const [date, setDate] = useState(
+    initialData?.date || new Date().toISOString().split("T")[0],
+  );
+  const [amount, setAmount] = useState(initialData?.amount || "");
+  const [mode, setMode] = useState(initialData?.mode || "cash");
+  const [notes, setNotes] = useState(initialData?.notes || "");
+  const [error, setError] = useState("");
 
   // Get the first and last day of the month for validation
-  const [year, month] = selectedMonth.split('-').map(Number);
-  const firstDay = new Date(year, month - 1, 1).toISOString().split('T')[0];
-  const lastDay = new Date(year, month, 0).toISOString().split('T')[0];
+  const [year, month] = selectedMonth.split("-").map(Number);
+  const firstDay = new Date(year, month - 1, 1).toISOString().split("T")[0];
+  const lastDay = new Date(year, month, 0).toISOString().split("T")[0];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     // Validation
     if (!date || !amount || !mode) {
-      setError('Please fill in all required fields');
+      setError("Please fill in all required fields");
       return;
     }
 
     const amountNum = parseFloat(amount);
     if (isNaN(amountNum) || amountNum <= 0) {
-      setError('Amount must be a valid positive number');
+      setError("Amount must be a valid positive number");
       return;
     }
 
     if (amountNum > monthlyTotal) {
       const response = window.confirm(
-        `Warning: Payment amount (₹${amountNum}) exceeds monthly consumption total (₹${monthlyTotal}). Continue?`
+        `Warning: Payment amount (₹${amountNum}) exceeds monthly consumption total (₹${monthlyTotal}). Continue?`,
       );
       if (!response) return;
     }
@@ -40,7 +49,7 @@ const AddPaymentForm = ({ selectedMonth, monthlyTotal, onSubmit, onCancel, isEdi
       date,
       amount: amountNum,
       mode,
-      notes: notes.trim() || '',
+      notes: notes.trim() || "",
     };
 
     onSubmit(paymentData);
@@ -48,11 +57,11 @@ const AddPaymentForm = ({ selectedMonth, monthlyTotal, onSubmit, onCancel, isEdi
   };
 
   const resetForm = () => {
-    setDate(new Date().toISOString().split('T')[0]);
-    setAmount('');
-    setMode('cash');
-    setNotes('');
-    setError('');
+    setDate(new Date().toISOString().split("T")[0]);
+    setAmount("");
+    setMode("cash");
+    setNotes("");
+    setError("");
   };
 
   return (
@@ -60,65 +69,131 @@ const AddPaymentForm = ({ selectedMonth, monthlyTotal, onSubmit, onCancel, isEdi
       <div className="modal-overlay" onClick={onCancel}></div>
       <div className="modal-content payment-form">
         <div className="modal-header">
-          <h2>{isEditing ? 'Edit Payment' : 'Add Payment'}</h2>
-          <button className="close-btn" onClick={onCancel}>×</button>
+          <h2>{isEditing ? "Edit Payment" : "Add Payment"}</h2>
+          <button className="close-btn" onClick={onCancel}>
+            ×
+          </button>
         </div>
 
         <div className="form-info">
-          <p>Month: <strong>{new Date(year, month - 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</strong></p>
-          <p>Monthly Milk Total: <strong>₹{monthlyTotal}</strong></p>
+          <p>
+            Month:{" "}
+            <strong>
+              {new Date(year, month - 1).toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
+            </strong>
+          </p>
+          <p>
+            Monthly Milk Total: <strong>₹{monthlyTotal}</strong>
+          </p>
         </div>
 
         <form onSubmit={handleSubmit}>
           {error && <div className="error-message">{error}</div>}
 
-          <div className="form-group">
-            <label htmlFor="date">
-              Payment Date <span className="required">*</span>
-            </label>
-            <input
-              type="date"
-              id="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              min={firstDay}
-              max={lastDay}
-              required
-            />
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="date">
+                Payment Date <span className="required">*</span>
+              </label>
+              <input
+                type="date"
+                id="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                min={firstDay}
+                max={lastDay}
+                required
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="amount">
+                Amount (₹) <span className="required">*</span>
+              </label>
+              <input
+                type="number"
+                id="amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="Enter amount"
+                step="10.00"
+                min="0"
+                required
+              />
+            </div>
           </div>
 
           <div className="form-group">
-            <label htmlFor="amount">
-              Amount (₹) <span className="required">*</span>
-            </label>
-            <input
-              type="number"
-              id="amount"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="Enter amount"
-              step="0.01"
-              min="0"
-              required
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="mode">
+            <label>
               Payment Mode <span className="required">*</span>
             </label>
-            <select
-              id="mode"
-              value={mode}
-              onChange={(e) => setMode(e.target.value)}
-              required
-            >
-              <option value="cash">💵 Cash</option>
-              <option value="card">💳 Card</option>
-              <option value="online">🌐 Online Transfer</option>
-              <option value="upi">📱 UPI</option>
-              <option value="cheque">✓ Cheque</option>
-            </select>
+
+            <div className="radio-group">
+              <label
+                className={`radio-card ${mode === "cash" ? "active" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="mode"
+                  value="cash"
+                  checked={mode === "cash"}
+                  onChange={(e) => setMode(e.target.value)}
+                />
+                <span className="radio-content">
+                  <span className="radio-icon">💵</span>
+                  <span className="radio-text">Cash</span>
+                </span>
+              </label>
+
+              <label
+                className={`radio-card ${mode === "card" ? "active" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="mode"
+                  value="card"
+                  checked={mode === "card"}
+                  onChange={(e) => setMode(e.target.value)}
+                />
+                <span className="radio-content">
+                  <span className="radio-icon">💳</span>
+                  <span className="radio-text">Card</span>
+                </span>
+              </label>
+
+              <label className={`radio-card ${mode === "upi" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  name="mode"
+                  value="upi"
+                  checked={mode === "upi"}
+                  onChange={(e) => setMode(e.target.value)}
+                />
+                <span className="radio-content">
+                  <span className="radio-icon">📱</span>
+                  <span className="radio-text">UPI</span>
+                </span>
+              </label>
+
+              <label
+                className={`radio-card ${mode === "online" ? "active" : ""}`}
+              >
+                <input
+                  type="radio"
+                  name="mode"
+                  value="online"
+                  checked={mode === "online"}
+                  onChange={(e) => setMode(e.target.value)}
+                />
+                <span className="radio-content">
+                  <span className="radio-icon">🌐</span>
+                  <span className="radio-text">Online</span>
+                </span>
+              </label>
+            </div>
           </div>
 
           <div className="form-group">
@@ -137,7 +212,7 @@ const AddPaymentForm = ({ selectedMonth, monthlyTotal, onSubmit, onCancel, isEdi
               Cancel
             </button>
             <button type="submit" className="btn-submit">
-              {isEditing ? 'Update Payment' : 'Add Payment'}
+              {isEditing ? "Update Payment" : "Add Payment"}
             </button>
           </div>
         </form>
