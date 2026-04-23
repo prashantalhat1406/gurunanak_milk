@@ -117,6 +117,12 @@
   background: #f5f5f5;
   border: none;
   cursor: default;
+  opacity: 0.7;
+}
+
+.mcal-cell:not(.mcal-cell-empty):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
 }
 
 /* =========================
@@ -135,10 +141,7 @@
    Content
 ========================= */
 
-/* .mcal-day {
-  font-weight: bold;
-  font-size: 13px;
-} */
+
 
 .mcal-day {
   position: absolute;
@@ -148,24 +151,7 @@
   font-weight: bold;
   font-size: 13px;
 }
-/* 
-.mcal-today {
-  border: 2px solid #42a5f5;
-  background: #e3f2fd !important;
-  position: relative;
-}
 
-.mcal-today::after {
-  content: "Today";
-  position: absolute;
-  top: 2px;
-  right: 4px;
-  font-size: 8px;
-  background: #42a5f5;
-  color: white;
-  padding: 2px 4px;
-  border-radius: 3px;
-} */
 
 .mcal-cell {
   position: relative;
@@ -184,13 +170,6 @@
   border-radius: 3px;
 }
 
-
-
-/* .mcal-data {
-  font-size: 10px;
-  text-align: right;
-  line-height: 1.1;
-} */
 
 .mcal-data {
   position: absolute;

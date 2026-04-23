@@ -62,10 +62,7 @@ const MilkCalendarView = ({
 
   const handleAddTransactionForDay = () => {
     if (!selectedDate) return;
-
-    onAddTransaction(selectedDate);
-
-    // ✅ THIS is what closes modal
+    onAddTransaction(selectedDate);    
     setSelectedDate(null);
   };
 
