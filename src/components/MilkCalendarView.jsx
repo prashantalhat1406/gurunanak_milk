@@ -49,10 +49,13 @@ const MilkCalendarView = ({
 
   const dayHeaders = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
+  const formatDate = (y, m, d) =>
+    `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+
   const handleDayClick = (day) => {
     if (!day) return;
 
-    const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    const dateStr = formatDate(year, month, day);
     setSelectedDate(dateStr);
   };
 
@@ -62,8 +65,27 @@ const MilkCalendarView = ({
 
   const handleAddTransactionForDay = () => {
     if (!selectedDate) return;
-    onAddTransaction(selectedDate);    
+    onAddTransaction(selectedDate);
     setSelectedDate(null);
+  };
+
+  const today = new Date();
+  const todayStr = formatDate(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    today.getDate(),
+  );
+
+  const getDaySummary = (transactions) => {
+    const hasMilk = transactions.some((t) => t.quantity > 0);
+    const hasNoMilk = transactions.some((t) => t.quantity === 0);
+
+    return {
+      hasMilk,
+      hasNoMilk,
+      milk: transactions.reduce((s, t) => s + t.quantity, 0),
+      amount: transactions.reduce((s, t) => s + t.amount, 0),
+    };
   };
 
   return (
@@ -113,17 +135,18 @@ const MilkCalendarView = ({
         {/* days */}
         {calendarDays.map((day, index) => {
           if (!day) {
-            return <div key={index} className="mcal-cell mcal-cell-empty" />;
+            return (
+              <div
+                key={`empty-${index}`}
+                className="mcal-cell mcal-cell-empty"
+              />
+            );
           }
 
-          const dateStr = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+          const dateStr = formatDate(year, month, day);
           const dayTx = transactionsMap[dateStr] || [];
 
-          const today = new Date();
-          const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-
-          const hasMilk = dayTx.some((t) => t.quantity > 0);
-          const hasNoMilk = dayTx.some((t) => t.quantity === 0);
+          const { hasMilk, hasNoMilk, milk, amount } = getDaySummary(dayTx);
 
           const isToday = dateStr === todayStr;
 
@@ -136,11 +159,9 @@ const MilkCalendarView = ({
             cellClass += " mcal-cell-milk";
           }
 
-          const milk = dayTx.reduce((s, t) => s + t.quantity, 0);
-          const amount = dayTx.reduce((s, t) => s + t.amount, 0);
-
           return (
             <div
+              role="button"
               key={dateStr}
               className={cellClass}
               onClick={() => handleDayClick(day)}
