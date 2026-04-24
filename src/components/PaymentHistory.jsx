@@ -135,6 +135,18 @@ const PaymentHistory = ({
               <span className="detail-label">Amount:</span>
               <span className="detail-value">₹{monthlyMilkAmount}</span>
             </div>
+            <div className="detail-item">
+              <span className="detail-label">Paid:</span>
+              <span className="detail-value">₹{totalPaid}</span>
+            </div>
+            <div className="detail-item">
+              <span className="detail-label">Outstanding:</span>
+              <span
+                className={`detail-value ${balance > 0 ? "pending" : "clear"}`}
+              >
+                ₹{balance > 0 ? balance : 0}
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -199,7 +211,7 @@ const PaymentHistory = ({
             ))}
           </div>
 
-          <div className="payment-history-footer">
+          {/* <div className="payment-history-footer">
             <div className="summary-row">
               <span>Total Paid:</span>
               <span className="total-value">₹{totalPaid}</span>
@@ -212,7 +224,7 @@ const PaymentHistory = ({
                 ₹{balance > 0 ? balance : 0}
               </span>
             </div>
-          </div>
+          </div> */}
         </>
       )}
     </div>

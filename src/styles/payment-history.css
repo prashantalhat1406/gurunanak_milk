@@ -82,7 +82,15 @@
 
 .detail-value {
   color: #667eea;
-  font-weight: 700;
+  font-weight: 700;  
+}
+
+.detail-value.pending {
+  color: #ff0026;
+}
+
+.detail-value.clear {
+  color: #2e7d32;
 }
 
 .no-transactions {
@@ -302,13 +310,7 @@
   font-weight: 700;
 }
 
-.summary-row .total-value.pending {
-  color: #ff9800;
-}
 
-.summary-row .total-value.clear {
-  color: #2e7d32;
-}
 
 /* Scrollbar styling */
 .transactions-list::-webkit-scrollbar {
