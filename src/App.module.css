@@ -1,0 +1,11 @@
+/* src/App.module.css */
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 10px;
+}
+
+.customerName {
+  margin: 0;
+}

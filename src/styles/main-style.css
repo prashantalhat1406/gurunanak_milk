@@ -1,5 +1,7 @@
-.main-container {  
+.main-container {
   padding: 20px;
   width: min(80%, 1900px);
   margin: 0 auto;
+  overflow-y: auto;
+  flex: 1;
 }

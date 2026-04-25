@@ -1,131 +1,63 @@
+// src/App.jsx
 import "./App.css";
 import "./styles/main-style.css";
 import "./styles/detail-view.css";
 import "./styles/buttons.css";
-import { useState, useEffect, useMemo } from "react";
-import Header from "./components/Header";
-import CustomerCard from "./components/CustomerCard";
-import AddCustomerModal from "./components/AddCustomerModal";
-import MilkCard from "./components/MilkCard";
-import MilkTransactionForm from "./components/MilkTransactionForm";
-import MilkCalendarView from "./components/MilkCalendarView";
-import PaymentHistory from "./components/PaymentHistory";
-import AddPaymentForm from "./components/AddPaymentForm";
-// import {
-//   loadCustomers,
-//   saveCustomers,
-//   generateCustomerID,
-// } from "./utils/dataService";
 
-import {
-  loadCustomers,
-  subscribeToCustomers,
-  loadTransactions,
-  subscribeToTransactions,
-  loadPayments,
-  subscribeToPayments,
-  addCustomer,
-  updateCustomer,
-  deleteCustomer,
-  addTransaction,
-  updateTransaction,
-  deleteTransaction,
-  addPayment,
-  updatePayment,
-  deletePayment,
-  getCustomerWithDetails,
-  migrateLocalDataToFirestore,
-} from './utils/dataService';
+import { useState } from "react";
+import Header from "./components/Header";
+import CustomerListView from "./views/CustomerListView";
+import CustomerDetailView from "./views/CustomerDetailView";
+
+import { useCustomers } from "./hooks/useCustomer";
+import { useCustomerDetail } from "./hooks/useCustomerDetail";
+import { useMonthNavigation } from "./hooks/useMonthNavigation";
 
 function App() {
-  const [customers, setCustomers] = useState([]);
+  // --- Navigation state ---
+  const [viewMode, setViewMode] = useState("list"); // "list" | "detail"
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
+
+  // --- Search state (simple — no debounce needed, filter is synchronous) ---
   const [searchTerm, setSearchTerm] = useState("");
+
+  // --- Customer form state ---
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
-  const [viewMode, setViewMode] = useState("list"); // 'list' or 'detail'
-  const [selectedCustomer, setSelectedCustomer] = useState(null);
-  const [selectedMonth, setSelectedMonth] = useState("2026-04");
-  const [showTransactionForm, setShowTransactionForm] = useState(false);
-  const [editingTransaction, setEditingTransaction] = useState(null);
-  const [transactionDate, setTransactionDate] = useState(null);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
-  const [editingPaymentIndex, setEditingPaymentIndex] = useState(null);
 
-  // Load data on component mount - Real-time listener
-  useEffect(() => {
-    // Subscribe to customer updates in real-time
-    const unsubscribe = subscribeToCustomers((customersData) => {
-      const customersWithDefaults = customersData.map((customer) => ({
-        ...customer,
-        milkTransactions: customer.milkTransactions || [],
-        payments: customer.payments || [],
-      }));
-      setCustomers(customersWithDefaults);
-    });
+  // --- Hooks ---
+  const { customers, saveCustomer, removeCustomer, fetchCustomerDetails } =
+    useCustomers();
 
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
+  const { selectedMonth, setSelectedMonth, handlePrevMonth, handleNextMonth } =
+    useMonthNavigation("2026-04");
 
-  // Subscribe to transaction and payment updates when customer is selected
-  useEffect(() => {
-    if (selectedCustomer?.id) {
-      const unsubscribeTransactions = subscribeToTransactions(
-        selectedCustomer.id,
-        (transactions) => {
-          setSelectedCustomer((prev) => ({
-            ...prev,
-            milkTransactions: transactions,
-          }));
-        }
-      );
+  const detail = useCustomerDetail(selectedCustomer, setSelectedMonth);
 
-      const unsubscribePayments = subscribeToPayments(
-        selectedCustomer.id,
-        (payments) => {
-          setSelectedCustomer((prev) => ({
-            ...prev,
-            payments: payments,
-          }));
-        }
-      );
-
-      return () => {
-        unsubscribeTransactions();
-        unsubscribePayments();
-      };
-    }
-  }, [selectedCustomer?.id]);
-
+  // --- Derived data ---
   const filteredCustomers = customers.filter(
-    (customer) =>
-      customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (customer.id && customer.id.toLowerCase().includes(searchTerm.toLowerCase())),
+    (c) =>
+      c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.id?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const handleSearch = (e) => setSearchTerm(e.target.value);
+  const filteredTransactions =
+    detail.customer?.milkTransactions?.filter((tx) =>
+      tx.date.startsWith(selectedMonth),
+    ) ?? [];
 
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      handleSearch(searchTerm);
-    }, 300);
+  const monthlyTotal = filteredTransactions.reduce(
+    (sum, tx) => sum + (tx.amount || 0),
+    0,
+  );
 
-    return () => clearTimeout(delay);
-  }, [searchTerm]);
-
-  const handleAddCustomer = async (customerData) => {
+  // --- Customer handlers ---
+  const handleSubmitCustomer = async (customerData) => {
     try {
-      if (editingCustomer) {
-        // Update existing customer
-        await updateCustomer(editingCustomer.id, customerData);
-      } else {
-        // Add new customer to Firebase
-        await addCustomer(customerData);
-      }
+      await saveCustomer(customerData, editingCustomer);
       setShowForm(false);
       setEditingCustomer(null);
-    } catch (error) {
-      console.error("Error saving customer:", error);
+    } catch {
       alert("Failed to save customer. Please try again.");
     }
   };
@@ -135,32 +67,23 @@ function App() {
     setShowForm(true);
   };
 
-  const handleDeleteCustomer = async (customerId) => {
-    if (window.confirm("Are you sure you want to delete this customer and all their records?")) {
-      try {
-        await deleteCustomer(customerId);
-        setViewMode("list");
-        setSelectedCustomer(null);
-      } catch (error) {
-        console.error("Error deleting customer:", error);
-        alert("Failed to delete customer. Please try again.");
-      }
-    }
-  };
-
-  const handleCancel = () => {
-    setShowForm(false);
-    setEditingCustomer(null);
-  };
+  // const handleDeleteCustomer = async (customerId) => {
+  //   if (!window.confirm("Delete this customer and all their records?")) return;
+  //   try {
+  //     await removeCustomer(customerId);
+  //     setViewMode("list");
+  //     setSelectedCustomer(null);
+  //   } catch {
+  //     alert("Failed to delete customer. Please try again.");
+  //   }
+  // };
 
   const handleCustomerClick = async (customer) => {
     try {
-      // Load full customer details with transactions and payments
-      const fullCustomer = await getCustomerWithDetails(customer.id);
-      setSelectedCustomer(fullCustomer);
+      const full = await fetchCustomerDetails(customer.id);
+      setSelectedCustomer(full);
       setViewMode("detail");
-    } catch (error) {
-      console.error("Error loading customer details:", error);
+    } catch {
       alert("Failed to load customer details. Please try again.");
     }
   };
@@ -170,325 +93,59 @@ function App() {
     setSelectedCustomer(null);
   };
 
-  const handleAddTransaction = async (transactionData) => {
-    try {
-      if (editingTransaction) {
-        // Update existing transaction
-        await updateTransaction(
-          editingTransaction.id,
-          selectedCustomer.id,
-          transactionData
-        );
-      } else {
-        // Add new transaction
-        await addTransaction(selectedCustomer.id, transactionData);
-
-        // Auto-navigate to the newly added transaction's month
-        const transactionMonth = transactionData.date.substring(0, 7);
-        setSelectedMonth(transactionMonth);
-      }
-
-      setShowTransactionForm(false);
-      setEditingTransaction(null);
-      setTransactionDate(null);
-    } catch (error) {
-      console.error("Error saving transaction:", error);
-      alert("Failed to save transaction. Please try again.");
-    }
-  };
-
-  const handleEditTransaction = (transaction) => {
-    setEditingTransaction(transaction);
-    setShowTransactionForm(true);
-  };
-
-  const handleCancelTransaction = () => {
-    setShowTransactionForm(false);
-    setEditingTransaction(null);
-    setTransactionDate(null);
-  };
-
-  const handleDeleteTransaction = async (transaction) => {
-    if (window.confirm("Are you sure you want to delete this transaction?")) {
-      try {
-        await deleteTransaction(
-          transaction.id,
-          selectedCustomer.id,
-          transaction
-        );
-      } catch (error) {
-        console.error("Error deleting transaction:", error);
-        alert("Failed to delete transaction. Please try again.");
-      }
-    }
-  };
-
-  // Payment handlers
-  const handleAddPaymentClick = () => {
-    setEditingPaymentIndex(null);
-    setShowPaymentForm(true);
-  };
-
-  const handleAddPayment = async (paymentData) => {
-    try {
-      await addPayment(selectedCustomer.id, paymentData);
-      setShowPaymentForm(false);
-    } catch (error) {
-      console.error("Error adding payment:", error);
-      alert("Failed to add payment. Please try again.");
-    }
-  };
-
-  const handleEditPayment = (paymentIndex) => {
-    setEditingPaymentIndex(paymentIndex);
-    setShowPaymentForm(true);
-  };
-
-  const handleUpdatePayment = async (paymentData) => {
-    try {
-      const payment = selectedCustomer.payments[editingPaymentIndex];
-      await updatePayment(payment.id, selectedCustomer.id, paymentData);
-      setShowPaymentForm(false);
-      setEditingPaymentIndex(null);
-    } catch (error) {
-      console.error("Error updating payment:", error);
-      alert("Failed to update payment. Please try again.");
-    }
-  };
-
-  const handleDeletePayment = async (paymentIndex) => {
-    if (window.confirm("Are you sure you want to delete this payment?")) {
-      try {
-        const payment = selectedCustomer.payments[paymentIndex];
-        await deletePayment(payment.id, selectedCustomer.id, payment);
-      } catch (error) {
-        console.error("Error deleting payment:", error);
-        alert("Failed to delete payment. Please try again.");
-      }
-    }
-  };
-
-  const handleCancelPayment = () => {
-    setShowPaymentForm(false);
-    setEditingPaymentIndex(null);
-  };
-
-  const handlePrevMonth = () => {
-    const [year, month] = selectedMonth.split("-").map(Number);
-    if (month === 1) {
-      setSelectedMonth(`${year - 1}-12`);
-    } else {
-      setSelectedMonth(`${year}-${String(month - 1).padStart(2, "0")}`);
-    }
-  };
-
-  const handleNextMonth = () => {
-    const [year, month] = selectedMonth.split("-").map(Number);
-    if (month === 12) {
-      setSelectedMonth(`${year + 1}-01`);
-    } else {
-      setSelectedMonth(`${year}-${String(month + 1).padStart(2, "0")}`);
-    }
-  };
-
-  const handleAddTransactionFromCalendar = (dateStr) => {
-    setTransactionDate(dateStr);
-    setShowTransactionForm(true);
-  };
-
-  const filteredMilkTransactions = selectedCustomer
-    ? selectedCustomer.milkTransactions.filter((transaction) =>
-        transaction.date.startsWith(selectedMonth),
-      )
-    : [];
-
-  const months = useMemo(() => {
-    const allMonths = new Set();
-
-    // If a customer is selected (detail view), collect months from that customer only
-    // Otherwise, collect from all customers
-    const sourcesForMonths = selectedCustomer ? [selectedCustomer] : customers;
-
-    sourcesForMonths.forEach((customer) => {
-      customer.milkTransactions.forEach((transaction) => {
-        const month = transaction.date.substring(0, 7); // Extract YYYY-MM
-        allMonths.add(month);
-      });
-    });
-
-    // Convert to array and sort
-    const monthArray = Array.from(allMonths).sort();
-
-    // If no transactions, provide some default months
-    if (monthArray.length === 0) {
-      return [
-        { value: "2024-04", label: "April 2024" },
-        { value: "2024-05", label: "May 2024" },
-        { value: "2024-06", label: "June 2024" },
-        { value: "2025-01", label: "January 2025" },
-        { value: "2025-02", label: "February 2025" },
-        { value: "2025-03", label: "March 2025" },
-        { value: "2025-04", label: "April 2025" },
-        { value: "2025-05", label: "May 2025" },
-        { value: "2025-06", label: "June 2025" },
-        { value: "2026-01", label: "January 2026" },
-        { value: "2026-02", label: "February 2026" },
-        { value: "2026-03", label: "March 2026" },
-        { value: "2026-04", label: "April 2026" },
-        { value: "2026-05", label: "May 2026" },
-        { value: "2026-06", label: "June 2026" },
-      ];
-    }
-
-    // Convert to label format
-    return monthArray.map((month) => {
-      const [year, monthNum] = month.split("-");
-      const monthNames = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
-      const monthName = monthNames[parseInt(monthNum) - 1];
-      return { value: month, label: `${monthName} ${year}` };
-    });
-  }, [customers, selectedCustomer]);
-
   return (
     <>
       <Header name="GuruNanak Milk Dairy" />
       <main className="main-container">
         {viewMode === "list" ? (
-          <>
-            <div className="toolbar">
-              <div className="search-box">
-                <div className="search-box-premium">
-                  <span className="icon">🔍</span>
-
-                  <input
-                    type="text"
-                    placeholder="Search by name or ID..."
-                    value={searchTerm}
-                    onChange={handleSearch}
-                  />
-                  {searchTerm && (
-                    <button onClick={() => setSearchTerm("")}>X</button>
-                  )}
-                </div>
-              </div>
-              <button className="btn-primary" onClick={() => setShowForm(true)}>
-                + Add Customer
-              </button>
-            </div>
-            {showForm && (
-              <AddCustomerModal
-                onSubmit={handleAddCustomer}
-                onCancel={handleCancel}
-                initialName={editingCustomer?.name || ""}
-                initialPhone={editingCustomer?.mobile || ""}
-                isEditing={!!editingCustomer}
-              />
-            )}
-            {/* <h2>Customer List ({filteredCustomers.length})</h2> */}
-            {/* <h2>Customer List</h2> */}
-            <div className="customer-list">
-              {filteredCustomers.map((customer) => (
-                <CustomerCard
-                  key={customer.id}
-                  customerID={customer.id}
-                  name={customer.name}
-                  mobile={customer.mobile}
-                  totalMilk={customer.totalMilk}
-                  totalAmount={customer.totalAmount}
-                  onEdit={handleEditCustomer}
-                  onClick={handleCustomerClick}
-                />
-              ))}
-            </div>
-          </>
+          <CustomerListView
+            customers={filteredCustomers}
+            searchTerm={searchTerm}
+            onSearchChange={(e) => setSearchTerm(e.target.value)}
+            onClearSearch={() => setSearchTerm("")}
+            showForm={showForm}
+            editingCustomer={editingCustomer}
+            onAddCustomerClick={() => setShowForm(true)}
+            onSubmitCustomer={handleSubmitCustomer}
+            onCancelCustomer={() => {
+              setShowForm(false);
+              setEditingCustomer(null);
+            }}
+            onEditCustomer={handleEditCustomer}
+            onCustomerClick={handleCustomerClick}
+          />
         ) : (
-          <>
-            <div
-              style={{
-                marginBottom: "10px",
-                display: "flex",
-                gap: "20px",
-                alignItems: "center",
-              }}
-            >
-              <button
-                onClick={handleBackToList}
-                className="back-button"
-              >
-                ← Back to Customers
-              </button>
-
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "8px" }}
-              >
-                <h2 style={{ margin: 0 }}>{selectedCustomer?.name}</h2>
-              </div>
-            </div>
-
-            {(showTransactionForm || editingTransaction) && (
-              <MilkTransactionForm
-                onSubmit={handleAddTransaction}
-                onCancel={handleCancelTransaction}
-                initialDate={transactionDate || editingTransaction?.date || ""}
-                initialQuantity={editingTransaction?.quantity || ""}
-                isEditing={!!editingTransaction}
-              />
-            )}
-
-            {showPaymentForm && (
-              <AddPaymentForm
-                selectedMonth={selectedMonth}
-                monthlyTotal={filteredMilkTransactions.reduce((sum, t) => sum + (t.amount || 0), 0)}
-                onSubmit={editingPaymentIndex !== null ? handleUpdatePayment : handleAddPayment}
-                onCancel={handleCancelPayment}
-                isEditing={editingPaymentIndex !== null}
-                initialData={
-                  editingPaymentIndex !== null
-                    ? selectedCustomer?.payments?.[editingPaymentIndex]
-                    : null
-                }
-              />
-            )}
-
-            <div className="detail-view-container">
-              <div className="calendar-section">
-                <MilkCalendarView
-                  transactions={filteredMilkTransactions}
-                  selectedMonth={selectedMonth}
-                  onPrevMonth={handlePrevMonth}
-                  onNextMonth={handleNextMonth}
-                  onMonthChange={setSelectedMonth}
-                  onAddTransaction={handleAddTransactionFromCalendar}
-                  onEditTransaction={handleEditTransaction}
-                  onDeleteTransaction={handleDeleteTransaction}
-                />
-              </div>
-
-              <div className="payment-history-section">
-                <PaymentHistory
-                  payments={selectedCustomer?.payments || []}
-                  milkTransactions={filteredMilkTransactions}
-                  selectedMonth={selectedMonth}
-                  onAdd={handleAddPaymentClick}
-                  onEdit={handleEditPayment}
-                  onDelete={handleDeletePayment}
-                />
-              </div>
-            </div>
-          </>
+          <CustomerDetailView
+            customer={detail.customer}
+            selectedMonth={selectedMonth}
+            filteredTransactions={filteredTransactions}
+            monthlyTotal={monthlyTotal}
+            // Transaction
+            showTransactionForm={detail.showTransactionForm}
+            editingTransaction={detail.editingTransaction}
+            transactionDate={detail.transactionDate}
+            onSaveTransaction={detail.handleSaveTransaction}
+            onEditTransaction={detail.handleEditTransaction}
+            onDeleteTransaction={detail.handleDeleteTransaction}
+            onAddTransactionFromCalendar={
+              detail.handleAddTransactionFromCalendar
+            }
+            onCancelTransaction={detail.handleCancelTransaction}
+            // Payment
+            showPaymentForm={detail.showPaymentForm}
+            editingPaymentIndex={detail.editingPaymentIndex}
+            onSavePayment={detail.handleSavePayment}
+            onEditPayment={detail.handleEditPayment}
+            onDeletePayment={detail.handleDeletePayment}
+            onAddPaymentClick={detail.handleAddPaymentClick}
+            onCancelPayment={detail.handleCancelPayment}
+            // Month navigation
+            onPrevMonth={handlePrevMonth}
+            onNextMonth={handleNextMonth}
+            onMonthChange={setSelectedMonth}
+            // Navigation
+            onBackToList={handleBackToList}
+          />
         )}
       </main>
     </>
