@@ -95,7 +95,7 @@ function App() {
 
   return (
     <>
-      <Header name="GuruNanak Milk Dairy" />
+      <Header name="GuruNanak" />
       <main className="main-container">
         {viewMode === "list" ? (
           <CustomerListView
