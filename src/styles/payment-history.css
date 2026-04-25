@@ -212,6 +212,7 @@
   color: #666;
   font-style: italic;
   font-size: 12px;
+  margin: 3px;
 }
 
 .transaction-row.total {
