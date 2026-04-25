@@ -125,7 +125,7 @@ const PaymentHistory = ({
 
       <div className="monthly-consumption">
         <div className="consumption-card">
-          <span className="consumption-label">Milk Consumption</span>
+          <span className="consumption-label">Summary</span>
           <div className="consumption-details">
             <div className="detail-item">
               <span className="detail-label">Qty:</span>
