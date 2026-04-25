@@ -12,6 +12,7 @@
 .customer-row-card.clickable:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+  background-color: #eef3ff;
 }
 
 .customer-list .customer-row-card:nth-child(even) {
@@ -21,8 +22,8 @@
   border-left: 3px solid #e0e0e0;
 }
 
-.customer-row-card:hover {
-  background-color: #eef3ff !important;
+.customer-row-card.clickable:hover .name {
+  text-decoration: underline;
 }
 
 .row-top {
