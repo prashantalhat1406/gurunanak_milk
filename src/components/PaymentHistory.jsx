@@ -1,31 +1,32 @@
 import React, { useState } from "react";
 import "../styles/payment-history.css";
+import ConfirmDialog from "@components/modals/ConfirmDialog";
 
-const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
-  if (!open) return null;
+// const ConfirmDialog = ({ open, title, message, onConfirm, onCancel }) => {
+//   if (!open) return null;
 
-  return (
-    <div className="modal-overlay" onClick={onCancel}>
-      <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
-        <h3 className="modal-title danger">
-          <span className="title-icon">⚠️</span>
-          {title}
-        </h3>
+//   return (
+//     <div className="modal-overlay" onClick={onCancel}>
+//       <div className="confirm-modal" onClick={(e) => e.stopPropagation()}>
+//         <h3 className="modal-title danger">
+//           <span className="title-icon">⚠️</span>
+//           {title}
+//         </h3>
 
-        <h4>{message}</h4>
+//         <h4>{message}</h4>
 
-        <div className="confirm-actions">
-          <button className="btn secondary" onClick={onCancel}>
-            Cancel
-          </button>
-          <button className="btn danger" onClick={onConfirm}>
-            Delete
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+//         <div className="confirm-actions">?
+//           <button className="btn secondary" onClick={onCancel}>
+//             Cancel
+//           </button>
+//           <button className="btn danger" onClick={onConfirm}>
+//             Delete
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 
 const PaymentHistory = ({
   payments,
