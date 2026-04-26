@@ -2,6 +2,7 @@
 5. when clicked on calandaer cell, if there is no transcation, then directly add milk modal should be open. no need to show modal with empty transcation details
 7. add customer ID  to customer data . this should be running number. this will help in search.
 8. ability to update milk rate
+9. remove use of index from all lists. payment history, milk transactions, customer list, calander view
 
 
 -----DONE
