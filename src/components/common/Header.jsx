@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import "../styles/header-style.css";
+import "@styles/header-style.css";
 
 export default function GurunankHeader() {
   return (

@@ -5,7 +5,7 @@ import "./styles/detail-view.css";
 import "./styles/buttons.css";
 
 import { useState } from "react";
-import Header from "./components/Header";
+import Header from "@components/common/Header";
 import CustomerListView from "./views/CustomerListView";
 import CustomerDetailView from "./views/CustomerDetailView";
 

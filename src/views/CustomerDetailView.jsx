@@ -1,6 +1,6 @@
 // src/views/CustomerDetailView.jsx
-import MilkTransactionForm from "@components/MilkTransactionForm";
-import MilkCalendarView from "@components/MilkCalendarView";
+import MilkTransactionForm from "@components/milk/AddMilkTransactionForm";
+import MilkCalendarView from "@components/milk/MilkCalendarView";
 import PaymentHistory from "@components/payments/PaymentHistory";
 import AddPaymentForm from "@components/payments/AddPaymentForm";
 import styles from "../App.module.css";

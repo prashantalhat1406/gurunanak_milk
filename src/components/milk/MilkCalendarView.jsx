@@ -1,8 +1,8 @@
 ﻿import React, { useState } from "react";
-import TransactionDetailsModal from "./TransactionDetailsModal";
-import "../styles/milk-calendar.css";
+import TransactionDetailsModal from "./MilkTransactionDetailsModal";
+import "@styles/milk-calendar.css";
 
-import { getMonthMeta, buildCalendarDays } from "../utils/calandar-utils";
+import { getMonthMeta, buildCalendarDays } from "../../utils/calandar-utils";
 
 const MilkCalendarView = ({
   transactions,

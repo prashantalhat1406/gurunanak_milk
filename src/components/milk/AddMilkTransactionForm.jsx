@@ -1,6 +1,6 @@
 ﻿import React, { useState, useEffect } from "react";
-import "../styles/milk-transaction-form.css";
-import MilkSummary from "../components/milk/MilkSummary.jsx";
+import "@styles/milk-transaction-form.css";
+import MilkSummary from "@components/milk/MilkSummary.jsx";
 
 const MilkTransactionForm = ({
   onSubmit,

@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import "../styles/transaction-details-modal.css";
+import "@styles/transaction-details-modal.css";
 import { FiEdit2 } from "react-icons/fi";
 import { FiTrash2 } from "react-icons/fi";
 
