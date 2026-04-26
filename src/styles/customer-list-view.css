@@ -60,5 +60,11 @@
 
 .search-box-premium:focus-within {
   border-color: #1976d2;
-  /* box-shadow: 0 6px 18px rgba(25,118,210,0.15); */
+  box-shadow: 0 6px 18px rgba(25,118,210,0.15);
+}
+
+.customer-list{
+  display: grid;
+  grid-template-columns: 1fr  1fr 1fr;
+  gap: 12px;
 }

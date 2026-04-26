@@ -15,12 +15,18 @@
   background-color: #eef3ff;
 }
 
-.customer-list .customer-row-card:nth-child(even) {
+/* .customer-list .customer-row-card:nth-child(even) {
   background-color: #f5f7fa;
 }
 .customer-row-card:nth-child(even) {
   border-left: 3px solid #e0e0e0;
+} */
+
+.customer-list .customer-row-card {
+  background-color: #f5f7fa;
+  border-left: 3px solid #e0e0e0;
 }
+
 
 .customer-row-card.clickable:hover .name {
   text-decoration: underline;
