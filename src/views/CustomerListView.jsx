@@ -1,8 +1,8 @@
 // src/views/CustomerListView.jsx
-import CustomerCard from "../components/CustomerCard";
-import AddCustomerModal from "../components/AddCustomerModal";
-import CustomerToolbar from "../components/customer/CustomerToolbar";
-import "../styles/customer-list-view.css";
+import CustomerCard from "@components/CustomerCard";
+import AddCustomerModal from "@components/customer/AddCustomerModal";
+import CustomerToolbar from "@components/customer/CustomerToolbar";
+import "@styles/customer-list-view.css";
 
 export default function CustomerListView({
   customers,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/add-customer-modal.css";
+import "@styles/add-customer-modal.css";
 
 const AddCustomerModal = ({
   onSubmit,
