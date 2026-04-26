@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect } from "react";
 import "../styles/milk-transaction-form.css";
+import MilkSummary from "../components/milk/MilkSummary.jsx";
 
 const MilkTransactionForm = ({
   onSubmit,
@@ -98,7 +99,7 @@ const MilkTransactionForm = ({
       >
         {/* Header */}
         {/* <div className="mtf-header"> */}
-        <div className="mtf-title-section">          
+        <div className="mtf-title-section">
           <h2 id="mtf-title" className="mtf-title">
             {isEditing ? "Edit Milk" : "Add Milk"}
           </h2>
@@ -174,23 +175,11 @@ const MilkTransactionForm = ({
             </label>
           </div>
 
-          {/* Quantity Field */}
-
-          {/* Summary */}
-          <div className="mtf-summary">
-            <div className="mtf-summary-row">
-              <span>Rate:</span>
-              <span>₹{MILK_RATE}/L</span>
-            </div>
-            <div className="mtf-summary-row">
-              <span>Quantity:</span>
-              <span>{displayQuantity} L</span>
-            </div>
-            <div className="mtf-summary-row">
-              <span>Amount:</span>
-              <span>₹{displayAmount}</span>
-            </div>
-          </div>
+          <MilkSummary
+            rate={MILK_RATE}
+            quantity={displayQuantity}
+            amount={displayAmount}
+          />
 
           {/* Actions */}
           <div className="mtf-actions">

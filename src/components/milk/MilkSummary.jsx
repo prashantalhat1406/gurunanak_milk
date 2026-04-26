@@ -1,0 +1,18 @@
+export default function MilkSummary({ rate, quantity, amount }) {
+  return (
+    <div className="mtf-summary">
+      <div className="mtf-summary-row">
+        <span>Rate:</span>
+        <span>₹{rate}/L</span>
+      </div>
+      <div className="mtf-summary-row">
+        <span>Quantity:</span>
+        <span>{quantity} L</span>
+      </div>
+      <div className="mtf-summary-row">
+        <span>Amount:</span>
+        <span>₹{amount}</span>
+      </div>
+    </div>
+  );
+};
