@@ -14,7 +14,7 @@ const MilkTransactionForm = ({
   const [isNoMilkDay, setIsNoMilkDay] = useState(initialQuantity === 0);
   const [errors, setErrors] = useState({});
 
-  const MILK_RATE = 50;
+  const MILK_RATE = 82;
 
   useEffect(() => {
     setDate(initialDate);
