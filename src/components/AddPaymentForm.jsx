@@ -64,6 +64,13 @@ const AddPaymentForm = ({
     setError("");
   };
 
+  const paymentModes = [
+    { value: "cash", icon: "💵", label: "Cash" },
+    { value: "card", icon: "💳", label: "Card" },
+    { value: "upi", icon: "📱", label: "UPI" },
+    { value: "online", icon: "🌐", label: "Online" },
+  ];
+
   return (
     <div className="add-payment-modal">
       <div className="modal-overlay" onClick={onCancel}></div>
@@ -132,67 +139,25 @@ const AddPaymentForm = ({
             </label>
 
             <div className="radio-group">
-              <label
-                className={`radio-card ${mode === "cash" ? "active" : ""}`}
-              >
-                <input
-                  type="radio"
-                  name="mode"
-                  value="cash"
-                  checked={mode === "cash"}
-                  onChange={(e) => setMode(e.target.value)}
-                />
-                <span className="radio-content">
-                  <span className="radio-icon">💵</span>
-                  <span className="radio-text">Cash</span>
-                </span>
-              </label>
+              {paymentModes.map((option) => (
+                <label
+                  key={option.value}
+                  className={`radio-card ${mode === option.value ? "active" : ""}`}
+                >
+                  <input
+                    type="radio"
+                    name="mode"
+                    value={option.value}
+                    checked={mode === option.value}
+                    onChange={(e) => setMode(e.target.value)}
+                  />
 
-              <label
-                className={`radio-card ${mode === "card" ? "active" : ""}`}
-              >
-                <input
-                  type="radio"
-                  name="mode"
-                  value="card"
-                  checked={mode === "card"}
-                  onChange={(e) => setMode(e.target.value)}
-                />
-                <span className="radio-content">
-                  <span className="radio-icon">💳</span>
-                  <span className="radio-text">Card</span>
-                </span>
-              </label>
-
-              <label className={`radio-card ${mode === "upi" ? "active" : ""}`}>
-                <input
-                  type="radio"
-                  name="mode"
-                  value="upi"
-                  checked={mode === "upi"}
-                  onChange={(e) => setMode(e.target.value)}
-                />
-                <span className="radio-content">
-                  <span className="radio-icon">📱</span>
-                  <span className="radio-text">UPI</span>
-                </span>
-              </label>
-
-              <label
-                className={`radio-card ${mode === "online" ? "active" : ""}`}
-              >
-                <input
-                  type="radio"
-                  name="mode"
-                  value="online"
-                  checked={mode === "online"}
-                  onChange={(e) => setMode(e.target.value)}
-                />
-                <span className="radio-content">
-                  <span className="radio-icon">🌐</span>
-                  <span className="radio-text">Online</span>
-                </span>
-              </label>
+                  <span className="radio-content">
+                    <span className="radio-icon">{option.icon}</span>
+                    <span className="radio-text">{option.label}</span>
+                  </span>
+                </label>
+              ))}
             </div>
           </div>
 
