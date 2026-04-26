@@ -173,11 +173,13 @@
 
 .mcal-data {
   position: absolute;
-  bottom: 3px;
-  right: 4px;
+  /* bottom: 3px;
+  right: 4px; */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
-  text-align: right;
-  font-size: 10px;
+  text-align: center;  
   line-height: 1.1;
 }
 
@@ -198,7 +200,7 @@
 
 /* stronger card-style emphasis */
 .mcal-qty {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   color: #1b5e20;
 }

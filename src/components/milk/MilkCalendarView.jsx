@@ -175,8 +175,8 @@ const MilkCalendarView = ({
                   <span className="mcal-no-milk">No Milk</span>
                 ) : (
                   <>
-                    <div className="mcal-qty">{milk}L</div>
-                    <div className="mcal-amount">₹{amount}</div>
+                    <div className="mcal-qty">{milk} L</div>
+                    {/* <div className="mcal-amount">₹{amount}</div> */}
                   </>
                 )}
               </div>
