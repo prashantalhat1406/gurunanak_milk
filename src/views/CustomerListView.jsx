@@ -1,5 +1,5 @@
 // src/views/CustomerListView.jsx
-import CustomerCard from "@components/CustomerCard";
+import CustomerCard from "@components/customer/CustomerCard";
 import AddCustomerModal from "@components/customer/AddCustomerModal";
 import CustomerToolbar from "@components/customer/CustomerToolbar";
 import "@styles/customer-list-view.css";

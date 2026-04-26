@@ -1,8 +1,8 @@
 // src/views/CustomerDetailView.jsx
-import MilkTransactionForm from "../components/MilkTransactionForm";
-import MilkCalendarView from "../components/MilkCalendarView";
-import PaymentHistory from "../components/PaymentHistory";
-import AddPaymentForm from "../components/AddPaymentForm";
+import MilkTransactionForm from "@components/MilkTransactionForm";
+import MilkCalendarView from "@components/MilkCalendarView";
+import PaymentHistory from "@components/payments/PaymentHistory";
+import AddPaymentForm from "@components/payments/AddPaymentForm";
 import styles from "../App.module.css";
 
 export default function CustomerDetailView({

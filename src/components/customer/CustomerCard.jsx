@@ -1,5 +1,5 @@
 ﻿import React from "react";
-import "../styles/customer-card.css";
+import "@styles/customer-card.css";
 
 const CustomerCard = ({
   customerID,

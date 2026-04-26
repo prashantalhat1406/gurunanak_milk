@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../styles/add-payment-form.css";
+import "@styles/add-payment-form.css";
 
 const AddPaymentForm = ({
   selectedMonth,
