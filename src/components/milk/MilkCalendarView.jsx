@@ -137,7 +137,7 @@ const MilkCalendarView = ({
           if (!day) {
             return (
               <div
-                key={`empty-${index}`}
+                key={`empty-${year}-${month}-${index}`}
                 className="mcal-cell mcal-cell-empty"
               />
             );

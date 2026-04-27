@@ -52,8 +52,8 @@ const TransactionDetailsModal = ({
             <h4 className="tdm-section-title">Transactions</h4>
 
             {transactions.length > 0 ? (
-              transactions.map((transaction, index) => (
-                <div key={index} className="tdm-transaction-item">
+              transactions.map((transaction) => (
+                <div key={transaction.id} className="tdm-transaction-item">
                   <div className="tdm-transaction-info">
                     {transaction.quantity === 0 ? (
                       <div className="tdm-no-milk">No Milk Day</div>
