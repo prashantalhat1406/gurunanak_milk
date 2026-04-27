@@ -9,6 +9,7 @@ const CustomerCard = ({
   totalAmount,
   onEdit,
   onClick,
+  onAddMilk,
 }) => {
   const customerData = { id: customerID, name, mobile, totalMilk, totalAmount };
 
@@ -21,6 +22,19 @@ const CustomerCard = ({
         <div className="name">{name}</div>
         <div className="right">
           {/* <span className="amount">₹{totalAmount}</span> */}
+
+          {onAddMilk && (
+            <button
+              className="add-milk-btn"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddMilk(customerData);
+              }}
+              title="Add milk transaction"
+            >
+              🥛
+            </button>
+          )}
 
           {onEdit && (
             <button

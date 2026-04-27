@@ -76,3 +76,17 @@
 .edit-btn:hover {
   opacity: 1;
 }
+
+.add-milk-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 2px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.add-milk-btn:hover {
+  opacity: 1;
+}

@@ -11,3 +11,4 @@
 4. header should remain constant. only main content should be scrollable
 6. in payment history, total paid and pending amount should be in header
 9. remove use of index from all lists. payment history, milk transactions, customer list, calander view
+10. ability to add milk from home screen, customer card

@@ -48,8 +48,8 @@
 
 .mtf-title-section {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
   padding: 20px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
@@ -57,16 +57,24 @@
   border-radius: 12px 12px 0 0;
 }
 
-.mtf-icon {
-  font-size: 24px;
+.mtf-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .mtf-title {
   margin: 0;
   font-size: 1.3rem;
   color: #fff;
-  font-weight: 600;  
-  margin-left: 8px;
+  font-weight: 600;
+}
+
+.mtf-customer-name {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 400;
 }
 
 .mtf-close-btn {

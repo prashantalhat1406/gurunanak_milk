@@ -12,6 +12,7 @@ import CustomerDetailView from "./views/CustomerDetailView";
 import { useCustomers } from "./hooks/useCustomer";
 import { useCustomerDetail } from "./hooks/useCustomerDetail";
 import { useMonthNavigation } from "./hooks/useMonthNavigation";
+import { addTransaction } from "./utils/dataService";
 
 function App() {
   // --- Navigation state ---
@@ -24,6 +25,10 @@ function App() {
   // --- Customer form state ---
   const [showForm, setShowForm] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState(null);
+
+  // --- Quick milk form state ---
+  const [showQuickMilkForm, setShowQuickMilkForm] = useState(false);
+  const [quickMilkCustomer, setQuickMilkCustomer] = useState(null);
 
   // --- Hooks ---
   const { customers, saveCustomer, removeCustomer, fetchCustomerDetails } =
@@ -88,6 +93,27 @@ function App() {
     }
   };
 
+  const handleQuickAddMilk = (customer) => {
+    setQuickMilkCustomer(customer);
+    setShowQuickMilkForm(true);
+  };
+
+  const handleQuickMilkSubmit = async (transactionData) => {
+    if (!quickMilkCustomer) return;
+    try {
+      await addTransaction(quickMilkCustomer.id, transactionData);
+      setShowQuickMilkForm(false);
+      setQuickMilkCustomer(null);
+    } catch {
+      alert("Failed to add milk transaction. Please try again.");
+    }
+  };
+
+  const handleQuickMilkCancel = () => {
+    setShowQuickMilkForm(false);
+    setQuickMilkCustomer(null);
+  };
+
   const handleBackToList = () => {
     setViewMode("list");
     setSelectedCustomer(null);
@@ -113,6 +139,11 @@ function App() {
             }}
             onEditCustomer={handleEditCustomer}
             onCustomerClick={handleCustomerClick}
+            onAddMilk={handleQuickAddMilk}
+            showQuickMilkForm={showQuickMilkForm}
+            quickMilkCustomer={quickMilkCustomer}
+            onQuickMilkSubmit={handleQuickMilkSubmit}
+            onQuickMilkCancel={handleQuickMilkCancel}
           />
         ) : (
           <CustomerDetailView

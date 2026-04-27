@@ -8,6 +8,7 @@ const MilkTransactionForm = ({
   initialDate = "",
   initialQuantity = "",
   isEditing = false,
+  customerName = "",
 }) => {
   const [date, setDate] = useState(initialDate);
   const [quantity, setQuantity] = useState(initialQuantity);
@@ -100,9 +101,14 @@ const MilkTransactionForm = ({
         {/* Header */}
         {/* <div className="mtf-header"> */}
         <div className="mtf-title-section">
-          <h2 id="mtf-title" className="mtf-title">
-            {isEditing ? "Edit Milk" : "Add Milk"}
-          </h2>
+          <div className="mtf-title-group">
+            <h2 id="mtf-title" className="mtf-title">
+              {isEditing ? "Edit Milk" : "Add Milk"}
+            </h2>
+            {customerName && (
+              <p className="mtf-customer-name">for {customerName}</p>
+            )}
+          </div>
           <button
             id="mtf-close-btn"
             className="mtf-close-btn"

@@ -2,6 +2,7 @@
 import CustomerCard from "@components/customer/CustomerCard";
 import AddCustomerModal from "@components/customer/AddCustomerModal";
 import CustomerToolbar from "@components/customer/CustomerToolbar";
+import MilkTransactionForm from "@components/milk/AddMilkTransactionForm";
 import "@styles/customer-list-view.css";
 
 export default function CustomerListView({
@@ -16,7 +17,17 @@ export default function CustomerListView({
   onCancelCustomer,
   onEditCustomer,
   onCustomerClick,
+  onAddMilk,
+  showQuickMilkForm,
+  quickMilkCustomer,
+  onQuickMilkSubmit,
+  onQuickMilkCancel,
 }) {
+  const getTodayStr = () => {
+    const today = new Date();
+    return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  };
+
   return (
     <>
       <CustomerToolbar
@@ -36,6 +47,17 @@ export default function CustomerListView({
         />
       )}
 
+      {showQuickMilkForm && (
+        <MilkTransactionForm
+          onSubmit={onQuickMilkSubmit}
+          onCancel={onQuickMilkCancel}
+          initialDate={getTodayStr()}
+          initialQuantity=""
+          isEditing={false}
+          customerName={quickMilkCustomer?.name}
+        />
+      )}
+
       <div className="customer-list">
         {customers.map((customer) => (
           <CustomerCard
@@ -47,6 +69,7 @@ export default function CustomerListView({
             totalAmount={customer.totalAmount}
             onEdit={onEditCustomer}
             onClick={onCustomerClick}
+            onAddMilk={onAddMilk}
           />
         ))}
       </div>
