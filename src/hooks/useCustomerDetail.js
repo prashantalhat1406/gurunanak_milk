@@ -19,7 +19,7 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
 
   // --- Payment state ---
   const [showPaymentForm, setShowPaymentForm]       = useState(false);
-  const [editingPaymentIndex, setEditingPaymentIndex] = useState(null);
+  const [editingPaymentId, setEditingPaymentId] = useState(null);
 
   // Real-time subscriptions for selected customer
   const [localCustomer, setLocalCustomer] = useState(selectedCustomer);
@@ -82,35 +82,36 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
 
   // --- Payment handlers ---
   const handleSavePayment = async (paymentData) => {
-    if (editingPaymentIndex !== null) {
-      const payment = localCustomer.payments[editingPaymentIndex];
-      await updatePayment(payment.id, localCustomer.id, paymentData);
+    if (editingPaymentId !== null) {
+      await updatePayment(editingPaymentId, localCustomer.id, paymentData);
     } else {
       await addPayment(localCustomer.id, paymentData);
     }
     setShowPaymentForm(false);
-    setEditingPaymentIndex(null);
+    setEditingPaymentId(null);
   };
 
-  const handleEditPayment = (index) => {
-    setEditingPaymentIndex(index);
+  const handleEditPayment = (paymentId) => {
+    setEditingPaymentId(paymentId);
     setShowPaymentForm(true);
   };
 
-  const handleDeletePayment = async (index) => {
+  const handleDeletePayment = async (paymentId) => {
     if (!window.confirm("Are you sure you want to delete this payment?")) return;
-    const payment = localCustomer.payments[index];
-    await deletePayment(payment.id, localCustomer.id, payment);
+    const payment = localCustomer.payments.find((p) => p.id === paymentId);
+    if (payment) {
+      await deletePayment(paymentId, localCustomer.id, payment);
+    }
   };
 
   const handleAddPaymentClick = () => {
-    setEditingPaymentIndex(null);
+    setEditingPaymentId(null);
     setShowPaymentForm(true);
   };
 
   const handleCancelPayment = () => {
     setShowPaymentForm(false);
-    setEditingPaymentIndex(null);
+    setEditingPaymentId(null);
   };
 
   return {
@@ -126,7 +127,7 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
     handleCancelTransaction,
     // Payment
     showPaymentForm,
-    editingPaymentIndex,
+    editingPaymentId,
     handleSavePayment,
     handleEditPayment,
     handleDeletePayment,

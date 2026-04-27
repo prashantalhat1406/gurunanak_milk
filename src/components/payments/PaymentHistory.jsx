@@ -44,15 +44,15 @@ const PaymentHistory = ({
   // Calculate balance
   const balance = monthlyMilkAmount - totalPaid;
 
-  const handleDeleteClick = (payment, index) => {
+  const handleDeleteClick = (payment) => {
     // if (window.confirm(`Delete payment for ${payment.date}?`)) {
-    //   onDelete(index);
+    //   onDelete(payment.id);
     // }
     setConfirmData({
       title: "Delete Payment?",
       message: `Delete payment for ${payment.date}?`,
       onConfirm: () => {
-        onDelete(index);
+        onDelete(payment.id);
         setConfirmData(null);
       },
     });
@@ -138,8 +138,8 @@ const PaymentHistory = ({
       ) : (
         <>
           <div className="transactions-list">
-            {sortedPayments.map((payment, index) => (
-              <div key={index} className="payment-item">
+            {sortedPayments.map((payment) => (
+              <div key={payment.id} className="payment-item">
                 <div className="payment-date-badge">
                   {new Date(payment.date).toLocaleDateString("en-US", {
                     month: "short",
@@ -171,14 +171,14 @@ const PaymentHistory = ({
                 <div className="transaction-actions">
                   <button
                     className="btn-edit"
-                    onClick={() => onEdit(index)}
+                    onClick={() => onEdit(payment.id)}
                     title="Edit payment"
                   >
                     ✎
                   </button>
                   <button
                     className="btn-delete"
-                    onClick={() => handleDeleteClick(payment, index)}
+                    onClick={() => handleDeleteClick(payment)}
                     title="Delete payment"
                   >
                     ✕

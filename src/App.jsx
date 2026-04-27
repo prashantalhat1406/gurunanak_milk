@@ -133,7 +133,7 @@ function App() {
             onCancelTransaction={detail.handleCancelTransaction}
             // Payment
             showPaymentForm={detail.showPaymentForm}
-            editingPaymentIndex={detail.editingPaymentIndex}
+            editingPaymentId={detail.editingPaymentId}
             onSavePayment={detail.handleSavePayment}
             onEditPayment={detail.handleEditPayment}
             onDeletePayment={detail.handleDeletePayment}

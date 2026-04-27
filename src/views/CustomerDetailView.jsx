@@ -21,7 +21,7 @@ export default function CustomerDetailView({
   onCancelTransaction,
   // Payment
   showPaymentForm,
-  editingPaymentIndex,
+  editingPaymentId,
   onSavePayment,
   onEditPayment,
   onDeletePayment,
@@ -61,10 +61,10 @@ export default function CustomerDetailView({
           monthlyTotal={monthlyTotal}
           onSubmit={onSavePayment}
           onCancel={onCancelPayment}
-          isEditing={editingPaymentIndex !== null}
+          isEditing={editingPaymentId !== null}
           initialData={
-            editingPaymentIndex !== null
-              ? customer?.payments?.[editingPaymentIndex]
+            editingPaymentId !== null
+              ? customer?.payments?.find((p) => p.id === editingPaymentId)
               : null
           }
         />
