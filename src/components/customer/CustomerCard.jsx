@@ -32,7 +32,7 @@ const CustomerCard = ({
               }}
               title="Add milk transaction"
             >
-              🥛
+              🐮
             </button>
           )}
 

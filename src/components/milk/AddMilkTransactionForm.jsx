@@ -12,7 +12,10 @@ const MilkTransactionForm = ({
   customerName = "",
 }) => {
   const [date, setDate] = useState(initialDate);
-  const [quantity, setQuantity] = useState(initialQuantity);
+  // const [quantity, setQuantity] = useState(initialQuantity);
+  const [quantity, setQuantity] = useState(
+    initialQuantity === "" ? "" : Number(initialQuantity),
+  );
   const [isNoMilkDay, setIsNoMilkDay] = useState(initialQuantity === 0);
   const [errors, setErrors] = useState({});
   const [milkRate, setMilkRate] = useState(82);
@@ -28,7 +31,8 @@ const MilkTransactionForm = ({
 
   useEffect(() => {
     setDate(initialDate);
-    setQuantity(initialQuantity);
+    // setQuantity(initialQuantity);
+    setQuantity(initialQuantity === "" ? "" : Number(initialQuantity));
     setIsNoMilkDay(initialQuantity === 0);
     setErrors({});
   }, [initialDate, initialQuantity]);
@@ -39,16 +43,21 @@ const MilkTransactionForm = ({
     if (checked) {
       setQuantity(0);
     } else {
-      setQuantity("0.5");
+      setQuantity(0.5);
     }
     if (errors.quantity) setErrors({ ...errors, quantity: "" });
   };
 
-  const handleQuantityChange = (e) => {
-    const value = e.target.value;
-    setQuantity(value);
-    if (errors.quantity) setErrors({ ...errors, quantity: "" });
-  };
+  // const handleQuantityChange = (e) => {
+  //   const value = e.target.value;
+  //   setQuantity(value);
+  //   if (errors.quantity) setErrors({ ...errors, quantity: "" });
+  // };
+
+  //   const handleQuantityChange = (e) => {
+  //   const value = e.target.value;
+  //   setQuantity(value === "" ? "" : Number(value));
+  // };
 
   const handleDateChange = (e) => {
     setDate(e.target.value);
@@ -61,8 +70,13 @@ const MilkTransactionForm = ({
 
     if (!date) newErrors.date = "Date is required";
 
-    const qty = isNoMilkDay ? 0 : parseFloat(quantity);
-    if (!isNoMilkDay && (!quantity || qty < 0)) {
+    // const qty = isNoMilkDay ? 0 : parseFloat(quantity);
+    const qty = isNoMilkDay ? 0 : Number(quantity);
+    // if (!isNoMilkDay && (!quantity || qty < 0)) {
+    //   newErrors.quantity = "Valid quantity is required";
+    // }
+    // if (!isNoMilkDay && (!quantity || isNaN(qty) || qty < 0))
+    if (!isNoMilkDay && (quantity === "" || isNaN(qty) || qty < 0)) {
       newErrors.quantity = "Valid quantity is required";
     }
 
@@ -93,8 +107,11 @@ const MilkTransactionForm = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onCancel]);
 
-  const displayQuantity = isNoMilkDay ? 0 : quantity ? parseFloat(quantity) : 0;
+  // const displayQuantity = isNoMilkDay ? 0 : quantity ? parseFloat(quantity) : 0;
+  const displayQuantity = isNoMilkDay ? 0 : Number(quantity) || 0;
   const displayAmount = (displayQuantity * milkRate).toFixed(2);
+
+  const STEP_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
   return (
     <div
@@ -153,11 +170,24 @@ const MilkTransactionForm = ({
                 <span className="mtf-error-message">{errors.date}</span>
               )}
             </div>
-            {!isNoMilkDay && (
-              <div className="mtf-form-group">
-                <label htmlFor="mtf-quantity-input">Quantity (Ltr)</label>
-                <div className="mtf-input-wrapper">
-                  <input
+            {/* {!isNoMilkDay && ( */}
+            <div className="mtf-form-group">
+              <label htmlFor="mtf-quantity-input">Quantity (Ltr)</label>
+              <div className="mtf-input-wrapper">
+                <div className="mtf-chips">
+                  {STEP_OPTIONS.map((val) => (
+                    <button
+                      key={val}
+                      type="button"
+                      disabled={isNoMilkDay}
+                      className={`mtf-chip ${Number(quantity) === val ? "is-active" : ""}`}
+                      onClick={() => setQuantity(Number(val))}
+                    >
+                      {val}
+                    </button>
+                  ))}
+                </div>
+                {/* <input
                     id="mtf-quantity-input"
                     type="number"
                     min="0"
@@ -166,14 +196,14 @@ const MilkTransactionForm = ({
                     value={quantity}
                     onChange={handleQuantityChange}
                     placeholder="0.5"
-                  />
-                  {/* <span className="mtf-input-icon">⚖️</span> */}
-                </div>
-                {errors.quantity && (
-                  <span className="mtf-error-message">{errors.quantity}</span>
-                )}
+                  /> */}
+                {/* <span className="mtf-input-icon">⚖️</span> */}
               </div>
-            )}
+              {errors.quantity && (
+                <span className="mtf-error-message">{errors.quantity}</span>
+              )}
+            </div>
+            {/* )} */}
           </div>
 
           {/* No Milk Day Checkbox */}
