@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "@styles/payment-history.css";
 import ConfirmDialog from "@components/modals/ConfirmDialog";
-
-
+import PaymentItem from "@components/payments/PaymentItem.jsx";
 
 const PaymentHistory = ({
   payments,
@@ -139,52 +138,14 @@ const PaymentHistory = ({
         <>
           <div className="transactions-list">
             {sortedPayments.map((payment) => (
-              <div key={payment.id} className="payment-item">
-                <div className="payment-date-badge">
-                  {new Date(payment.date).toLocaleDateString("en-US", {
-                    month: "short",
-                    day: "numeric",
-                  })}
-                </div>
-                <div className="payment-details">
-                  <div className="payment-row">
-                    <span className="label">Date:</span>
-                    <span className="value">{payment.date}</span>
-                  </div>
-                  <div className="payment-row">
-                    <span className="label">Amount:</span>
-                    <span className="value amount">₹{payment.amount}</span>
-                  </div>
-                  <div className="payment-row">
-                    <span className="label">Mode:</span>
-                    <span className="value mode-badge">
-                      {getModeIcon(payment.mode)} {getModeName(payment.mode)}
-                    </span>
-                  </div>
-                  {payment.notes && (
-                    <div className="payment-row">
-                      <span className="label">Note:</span>
-                      <span className="value notes">{payment.notes}</span>
-                    </div>
-                  )}
-                </div>
-                <div className="transaction-actions">
-                  <button
-                    className="btn-edit"
-                    onClick={() => onEdit(payment.id)}
-                    title="Edit payment"
-                  >
-                    ✎
-                  </button>
-                  <button
-                    className="btn-delete"
-                    onClick={() => handleDeleteClick(payment)}
-                    title="Delete payment"
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
+              <PaymentItem
+                key={payment.id}
+                payment={payment}
+                onEdit={onEdit}
+                onDelete={handleDeleteClick}
+                getModeIcon={getModeIcon}
+                getModeName={getModeName}
+              />
             ))}
           </div>
         </>

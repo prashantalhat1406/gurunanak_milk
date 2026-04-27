@@ -161,7 +161,7 @@ const AddPaymentForm = ({
             </div>
           </div>
 
-          <div className="form-group">
+          {/* <div className="form-group">
             <label htmlFor="notes">Notes (Optional)</label>
             <textarea
               id="notes"
@@ -170,7 +170,7 @@ const AddPaymentForm = ({
               placeholder="Add any notes or reference number..."
               rows="3"
             />
-          </div>
+          </div> */}
 
           <div className="form-actions">
             <button type="button" className="btn-cancel" onClick={onCancel}>
