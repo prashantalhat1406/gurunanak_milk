@@ -1,7 +1,7 @@
 ﻿import React from "react";
 import "@styles/header-style.css";
 
-export default function GurunankHeader() {
+export default function GurunankHeader({ onSettingsClick }) {
   return (
     <header className="gurunank-header">
       <h1 className="gurunank-title">Gurunanak</h1>
@@ -11,6 +11,16 @@ export default function GurunankHeader() {
         <span className="subtitle">Dairy & Sweets</span>
         <div className="line" />
       </div>
+
+      {onSettingsClick && (
+        <button
+          className="header-settings-btn"
+          onClick={onSettingsClick}
+          title="Settings"
+        >
+          ⚙️
+        </button>
+      )}
     </header>
   );
 }

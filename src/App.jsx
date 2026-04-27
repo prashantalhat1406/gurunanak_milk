@@ -8,6 +8,7 @@ import { useState } from "react";
 import Header from "@components/common/Header";
 import CustomerListView from "./views/CustomerListView";
 import CustomerDetailView from "./views/CustomerDetailView";
+import SettingsModal from "@components/common/SettingsModal";
 
 import { useCustomers } from "./hooks/useCustomer";
 import { useCustomerDetail } from "./hooks/useCustomerDetail";
@@ -29,6 +30,9 @@ function App() {
   // --- Quick milk form state ---
   const [showQuickMilkForm, setShowQuickMilkForm] = useState(false);
   const [quickMilkCustomer, setQuickMilkCustomer] = useState(null);
+
+  // --- Settings state ---
+  const [showSettings, setShowSettings] = useState(false);
 
   // --- Hooks ---
   const { customers, saveCustomer, removeCustomer, fetchCustomerDetails } =
@@ -121,7 +125,12 @@ function App() {
 
   return (
     <>
-      <Header name="GuruNanak" />
+      <Header name="GuruNanak" onSettingsClick={() => setShowSettings(true)} />
+      
+      {showSettings && (
+        <SettingsModal onClose={() => setShowSettings(false)} />
+      )}
+      
       <main className="main-container">
         {viewMode === "list" ? (
           <CustomerListView

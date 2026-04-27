@@ -7,7 +7,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+  position: relative;
 
   /* Background gradient */
   background: linear-gradient(135deg, #000d3b 0%, #01103d 40%, #0a2a6b 100%);
@@ -68,4 +68,22 @@
   .subtitle {
     font-size: 0.85rem;
   }
+}
+
+.header-settings-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.header-settings-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
 }

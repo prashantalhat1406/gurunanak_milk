@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from "react";
 import "@styles/milk-transaction-form.css";
 import MilkSummary from "@components/milk/MilkSummary.jsx";
+import { getMilkRate, subscribeMilkRate } from "../../utils/dataService";
 
 const MilkTransactionForm = ({
   onSubmit,
@@ -14,8 +15,16 @@ const MilkTransactionForm = ({
   const [quantity, setQuantity] = useState(initialQuantity);
   const [isNoMilkDay, setIsNoMilkDay] = useState(initialQuantity === 0);
   const [errors, setErrors] = useState({});
+  const [milkRate, setMilkRate] = useState(82);
 
-  const MILK_RATE = 82;
+  useEffect(() => {
+    // Subscribe to milk rate changes
+    const unsubscribe = subscribeMilkRate((rate) => {
+      setMilkRate(rate);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     setDate(initialDate);
@@ -62,8 +71,8 @@ const MilkTransactionForm = ({
       return;
     }
 
-    const amount = qty * MILK_RATE;
-    onSubmit({ date, quantity: qty, rate: MILK_RATE, amount });
+    const amount = qty * milkRate;
+    onSubmit({ date, quantity: qty, rate: milkRate, amount });
 
     if (!isEditing) {
       setDate("");
@@ -85,7 +94,7 @@ const MilkTransactionForm = ({
   }, [onCancel]);
 
   const displayQuantity = isNoMilkDay ? 0 : quantity ? parseFloat(quantity) : 0;
-  const displayAmount = (displayQuantity * MILK_RATE).toFixed(2);
+  const displayAmount = (displayQuantity * milkRate).toFixed(2);
 
   return (
     <div
@@ -182,7 +191,7 @@ const MilkTransactionForm = ({
           </div>
 
           <MilkSummary
-            rate={MILK_RATE}
+            rate={milkRate}
             quantity={displayQuantity}
             amount={displayAmount}
           />

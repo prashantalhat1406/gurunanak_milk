@@ -465,3 +465,63 @@ export const migrateLocalDataToFirestore = async (customers) => {
     throw error;
   }
 };
+
+// ==================== SETTINGS ====================
+
+const DEFAULT_MILK_RATE = 82;
+
+/**
+ * Get current milk rate from settings
+ */
+export const getMilkRate = async () => {
+  try {
+    const settingsRef = doc(db, 'settings', 'milkRate');
+    const settingsDoc = await getDoc(settingsRef);
+    
+    if (settingsDoc.exists()) {
+      return settingsDoc.data().rate || DEFAULT_MILK_RATE;
+    }
+    
+    // If settings don't exist, create with default rate
+    await setDoc(settingsRef, { rate: DEFAULT_MILK_RATE, updatedAt: Timestamp.now() });
+    return DEFAULT_MILK_RATE;
+  } catch (error) {
+    console.error('Error getting milk rate:', error);
+    return DEFAULT_MILK_RATE;
+  }
+};
+
+/**
+ * Update milk rate
+ */
+export const updateMilkRate = async (newRate) => {
+  try {
+    const settingsRef = doc(db, 'settings', 'milkRate');
+    await setDoc(settingsRef, { rate: newRate, updatedAt: Timestamp.now() }, { merge: true });
+  } catch (error) {
+    console.error('Error updating milk rate:', error);
+    throw error;
+  }
+};
+
+/**
+ * Real-time listener for milk rate changes
+ */
+export const subscribeMilkRate = (callback) => {
+  const settingsRef = doc(db, 'settings', 'milkRate');
+  const unsubscribe = onSnapshot(
+    settingsRef,
+    (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.data().rate || DEFAULT_MILK_RATE);
+      } else {
+        callback(DEFAULT_MILK_RATE);
+      }
+    },
+    (error) => {
+      console.error('Error subscribing to milk rate:', error);
+      callback(DEFAULT_MILK_RATE);
+    }
+  );
+  return unsubscribe;
+};
