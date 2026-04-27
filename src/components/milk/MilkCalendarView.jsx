@@ -56,7 +56,15 @@ const MilkCalendarView = ({
     if (!day) return;
 
     const dateStr = formatDate(year, month, day);
-    setSelectedDate(dateStr);
+    const dayTx = transactionsMap[dateStr] || [];
+
+    // If no transactions for this day, directly open add milk form
+    if (dayTx.length === 0) {
+      onAddTransaction(dateStr);
+    } else {
+      // If transactions exist, show the details modal
+      setSelectedDate(dateStr);
+    }
   };
 
   const selectedTransactions = selectedDate
