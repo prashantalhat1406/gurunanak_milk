@@ -28,6 +28,10 @@ export default function CustomerListView({
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   };
 
+  const sortedCustomers = [...customers].sort(
+  (a, b) => a.customerID - b.customerID
+);
+
   return (
     <>
       <CustomerToolbar
@@ -59,7 +63,7 @@ export default function CustomerListView({
       )}
 
       <div className="customer-list">
-        {customers.map((customer) => (
+        {sortedCustomers.map((customer) => (
           <CustomerCard
             key={customer.id}
             id={customer.id}
