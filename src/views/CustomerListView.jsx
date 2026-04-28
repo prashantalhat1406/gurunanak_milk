@@ -62,7 +62,8 @@ export default function CustomerListView({
         {customers.map((customer) => (
           <CustomerCard
             key={customer.id}
-            customerID={customer.id}
+            id={customer.id}
+            customerID={customer.customerID}
             name={customer.name}
             mobile={customer.mobile}
             totalMilk={customer.totalMilk}

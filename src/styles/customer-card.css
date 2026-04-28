@@ -24,7 +24,7 @@
 
 .customer-list .customer-row-card {
   background-color: #f5f7fa;
-  border-left: 3px solid #e0e0e0;
+  border-left: 3px solid #4912d5;
 }
 
 
@@ -36,6 +36,24 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.name-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.customer-id {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+  background: #4912d5;
+  padding: 4px 10px;
+  border-radius: 4px;
+  min-width: 50px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .name {

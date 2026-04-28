@@ -2,6 +2,7 @@
 import "@styles/customer-card.css";
 
 const CustomerCard = ({
+  id,
   customerID,
   name,
   mobile,
@@ -11,7 +12,7 @@ const CustomerCard = ({
   onClick,
   onAddMilk,
 }) => {
-  const customerData = { id: customerID, name, mobile, totalMilk, totalAmount };
+  const customerData = { id, customerID, name, mobile, totalMilk, totalAmount };
 
   return (
     <div
@@ -19,7 +20,10 @@ const CustomerCard = ({
       onClick={onClick ? () => onClick(customerData) : undefined}
     >
       <div className="row-top">
-        <div className="name">{name}</div>
+        <div className="name-section">
+          <div className="customer-id">{customerID}</div>
+          <div className="name">{name}</div>
+        </div>
         <div className="right">
           {/* <span className="amount">₹{totalAmount}</span> */}
 

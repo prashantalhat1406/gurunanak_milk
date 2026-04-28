@@ -47,6 +47,7 @@ function App() {
   const filteredCustomers = customers.filter(
     (c) =>
       c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.customerID?.toString().includes(searchTerm) ||
       c.id?.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 

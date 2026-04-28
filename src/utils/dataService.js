@@ -63,8 +63,12 @@ export const subscribeToCustomers = (callback) => {
  */
 export const addCustomer = async (customerData) => {
   try {
+    // Generate sequential customer ID
+    const customerID = await generateCustomerID();
+    
     const newCustomer = {
       ...customerData,
+      customerID: customerID,
       totalMilk: 0,
       totalAmount: 0,
       totalPaid: 0,
@@ -73,7 +77,7 @@ export const addCustomer = async (customerData) => {
     };
     
     const docRef = await addDoc(collection(db, 'customers'), newCustomer);
-    return { ...newCustomer, id: docRef.id, customerID: docRef.id };
+    return { ...newCustomer, id: docRef.id };
   } catch (error) {
     console.error('Error adding customer:', error);
     throw error;
@@ -373,11 +377,35 @@ export const deletePayment = async (paymentId, customerId, paymentData) => {
 // ==================== UTILITY FUNCTIONS ====================
 
 /**
- * Generate customer ID (can use auto-generated doc ID or custom format)
+ * Get the next sequential customer number
  */
-export const generateCustomerID = () => {
-  // Firestore auto-generates IDs, or you can generate custom format
-  return `C${Date.now()}`;
+const getNextCustomerNumber = async () => {
+  try {
+    const counterRef = doc(db, 'settings', 'customerCounter');
+    const counterDoc = await getDoc(counterRef);
+    
+    let nextNumber = 1;
+    if (counterDoc.exists()) {
+      nextNumber = (counterDoc.data().count || 0) + 1;
+    }
+    
+    // Update counter
+    await setDoc(counterRef, { count: nextNumber, updatedAt: Timestamp.now() });
+    
+    return nextNumber;
+  } catch (error) {
+    console.error('Error getting next customer number:', error);
+    // Fallback to timestamp-based ID if counter fails
+    return Date.now();
+  }
+};
+
+/**
+ * Generate customer ID with sequential number
+ */
+export const generateCustomerID = async () => {
+  const number = await getNextCustomerNumber();
+  return number;
 };
 
 /**
