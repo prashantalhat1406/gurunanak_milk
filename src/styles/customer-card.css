@@ -24,7 +24,7 @@
 
 .customer-list .customer-row-card {
   background-color: #f5f7fa;
-  border-left: 3px solid #4912d5;
+  border-left: 1px solid #4912d5;
 }
 
 
@@ -48,7 +48,7 @@
   font-size: 0.85rem;
   font-weight: 700;
   color: #fff;
-  background: #4912d5;
+  background: #4912d5; /*4912d5*/
   
   width: 30px;
   height: 30px;
