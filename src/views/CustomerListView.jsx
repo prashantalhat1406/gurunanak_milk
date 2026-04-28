@@ -28,9 +28,19 @@ export default function CustomerListView({
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
   };
 
+  const toProperCase = (str) =>
+    str.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+
   const sortedCustomers = [...customers].sort(
-  (a, b) => a.customerID - b.customerID
-);
+    (a, b) => a.customerID - b.customerID,
+  );
+
+  const processedCustomers = [...sortedCustomers]
+  .sort((a, b) => a.customerID - b.customerID)
+  .map(customer => ({
+    ...customer,
+    name: toProperCase(customer.name)
+  }));
 
   return (
     <>
@@ -63,7 +73,7 @@ export default function CustomerListView({
       )}
 
       <div className="customer-list">
-        {sortedCustomers.map((customer) => (
+        {processedCustomers.map((customer) => (
           <CustomerCard
             key={customer.id}
             id={customer.id}

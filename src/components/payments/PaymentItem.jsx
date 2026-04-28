@@ -9,10 +9,9 @@ const PaymentItem = ({
   return (
     <div className="payment-item">
       <div className="payment-date-badge">
-        {new Date(payment.date).toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-        })}
+        {`${new Date(payment.date).getDate()}${new Date(
+          payment.date,
+        ).toLocaleString("en-US", { month: "short" })}`}
       </div>
 
       <div className="payment-details">
