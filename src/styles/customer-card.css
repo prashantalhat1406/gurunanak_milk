@@ -1,5 +1,5 @@
 .customer-row-card {
-  padding: 12px 14px;
+  padding: 10px 8px;
   margin-bottom: 10px;
   border-radius: 5px;
   background: #fff;
@@ -63,7 +63,7 @@
 
 .name {
   font-weight: 600;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
 }
 
 .right {

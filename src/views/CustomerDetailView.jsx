@@ -41,7 +41,8 @@ export default function CustomerDetailView({
         <button onClick={onBackToList} className="back-button">
           &larr; Back to Customers
         </button>
-        <h2 className={styles.customerName}>{customer?.name}</h2>
+        <h2 className={styles.customerName}>{customer?.name} </h2>
+        <h3 className={styles.customerName}>({customer?.mobile})</h3>
       </div>
 
       {/* Inline forms (conditionally rendered) */}

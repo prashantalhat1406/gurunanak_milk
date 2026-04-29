@@ -54,11 +54,11 @@ const CustomerCard = ({
         </div>
       </div>
 
-      <div className="row-bottom">
+      {/* <div className="row-bottom">
         <span>{mobile}</span>
-        {/* <span>ID: {customerID}</span> */}
-        {/* <span>{totalMilk}L</span> */}
-      </div>
+        <span>ID: {customerID}</span>
+        <span>{totalMilk}L</span>
+      </div> */}
     </div>
   );
 };
