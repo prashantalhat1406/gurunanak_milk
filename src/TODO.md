@@ -1,4 +1,12 @@
 1. customer card should show pending amount. This amount is total amount - amount paid by customer
+11. add role based entry
+12. send information to user via sms or whatsapp
+13. date format should be dd-mmm-yyyy on calander
+14. add provision for cow milk price in settings
+15. user should be able to add cow as well as buffelo milk
+16. payment information should show all payments , what is due
+17. make calandaer and payment history show as 2 tabs instead of showing side by side
+18. on add milk form, use should be able to select cow, buffelo or both. 
 
 
 

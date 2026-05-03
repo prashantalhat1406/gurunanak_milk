@@ -1,4 +1,5 @@
 // src/views/CustomerDetailView.jsx
+import { useState } from "react";
 import MilkTransactionForm from "@components/milk/AddMilkTransactionForm";
 import MilkCalendarView from "@components/milk/MilkCalendarView";
 import PaymentHistory from "@components/payments/PaymentHistory";
@@ -34,6 +35,7 @@ export default function CustomerDetailView({
   // Navigation
   onBackToList,
 }) {
+  const [activeTab, setActiveTab] = useState("milk");
   return (
     <>
       {/* Detail header */}
@@ -71,30 +73,55 @@ export default function CustomerDetailView({
         />
       )}
 
-      {/* Main detail layout */}
+      {/* Main detail layout with tabs */}
       <div className="detail-view-container">
-        <div className="calendar-section">
-          <MilkCalendarView
-            transactions={filteredTransactions}
-            selectedMonth={selectedMonth}
-            onPrevMonth={onPrevMonth}
-            onNextMonth={onNextMonth}
-            onMonthChange={onMonthChange}
-            onAddTransaction={onAddTransactionFromCalendar}
-            onEditTransaction={onEditTransaction}
-            onDeleteTransaction={onDeleteTransaction}
-          />
+        {/* Tab Navigation */}
+        <div className="tab-navigation">
+          <button
+            className={`tab-button ${activeTab === "milk" ? "active" : ""}`}
+            onClick={() => setActiveTab("milk")}
+          >
+            Milk Calendar
+          </button>
+          <button
+            className={`tab-button ${activeTab === "payments" ? "active" : ""}`}
+            onClick={() => setActiveTab("payments")}
+          >
+            Payment History
+          </button>
         </div>
 
-        <div className="payment-history-section">
-          <PaymentHistory
-            payments={customer?.payments || []}
-            milkTransactions={filteredTransactions}
-            selectedMonth={selectedMonth}
-            onAdd={onAddPaymentClick}
-            onEdit={onEditPayment}
-            onDelete={onDeletePayment}
-          />
+        {/* Tab Content */}
+        <div className="tab-content">
+          {/* Milk Calendar Tab */}
+          {activeTab === "milk" && (
+            <div className="calendar-section">
+              <MilkCalendarView
+                transactions={filteredTransactions}
+                selectedMonth={selectedMonth}
+                onPrevMonth={onPrevMonth}
+                onNextMonth={onNextMonth}
+                onMonthChange={onMonthChange}
+                onAddTransaction={onAddTransactionFromCalendar}
+                onEditTransaction={onEditTransaction}
+                onDeleteTransaction={onDeleteTransaction}
+              />
+            </div>
+          )}
+
+          {/* Payment History Tab */}
+          {activeTab === "payments" && (
+            <div className="payment-history-section">
+              <PaymentHistory
+                payments={customer?.payments || []}
+                milkTransactions={filteredTransactions}
+                selectedMonth={selectedMonth}
+                onAdd={onAddPaymentClick}
+                onEdit={onEditPayment}
+                onDelete={onDeletePayment}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
