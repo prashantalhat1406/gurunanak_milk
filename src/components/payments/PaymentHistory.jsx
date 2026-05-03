@@ -89,7 +89,7 @@ const PaymentHistory = ({
         onCancel={() => setConfirmData(null)}
       />
       <div className="payment-history-header">
-        <h3>Payment History</h3>
+        {/* <h3>Payment History</h3> */}
         <button
           className="btn-add-payment"
           onClick={onAdd}

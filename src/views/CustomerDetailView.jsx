@@ -77,18 +77,20 @@ export default function CustomerDetailView({
       <div className="detail-view-container">
         {/* Tab Navigation */}
         <div className="tab-navigation">
-          <button
-            className={`tab-button ${activeTab === "milk" ? "active" : ""}`}
-            onClick={() => setActiveTab("milk")}
-          >
-            Milk Calendar
-          </button>
-          <button
-            className={`tab-button ${activeTab === "payments" ? "active" : ""}`}
-            onClick={() => setActiveTab("payments")}
-          >
-            Payment History
-          </button>
+          <div className="tab-group">
+            <button
+              className={`tab-button ${activeTab === "milk" ? "active" : ""}`}
+              onClick={() => setActiveTab("milk")}
+            >
+              Milk Calendar
+            </button>
+            <button
+              className={`tab-button ${activeTab === "payments" ? "active" : ""}`}
+              onClick={() => setActiveTab("payments")}
+            >
+              Payment History
+            </button>
+          </div>
         </div>
 
         {/* Tab Content */}

@@ -1,8 +1,8 @@
 // src/App.jsx
 import "./App.css";
-import "./styles/main-style.css";
-import "./styles/detail-view.css";
-import "./styles/buttons.css";
+import "@styles/main-style.css";
+import "@styles/customer-detail-view.css";
+import "@styles/buttons.css";
 
 import { useState } from "react";
 import Header from "@components/common/Header";
