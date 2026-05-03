@@ -496,38 +496,57 @@ export const migrateLocalDataToFirestore = async (customers) => {
 
 // ==================== SETTINGS ====================
 
-const DEFAULT_MILK_RATE = 82;
+const DEFAULT_COW_RATE = 82;
+const DEFAULT_BUFFALO_RATE = 95;
 
 /**
- * Get current milk rate from settings
+ * Get all milk rates (cow and buffalo) from settings
  */
 export const getMilkRate = async () => {
   try {
-    const settingsRef = doc(db, 'settings', 'milkRate');
+    const settingsRef = doc(db, 'settings', 'milkRates');
     const settingsDoc = await getDoc(settingsRef);
     
     if (settingsDoc.exists()) {
-      return settingsDoc.data().rate || DEFAULT_MILK_RATE;
+      return {
+        cow: settingsDoc.data().cow || DEFAULT_COW_RATE,
+        buffalo: settingsDoc.data().buffalo || DEFAULT_BUFFALO_RATE,
+      };
     }
     
-    // If settings don't exist, create with default rate
-    await setDoc(settingsRef, { rate: DEFAULT_MILK_RATE, updatedAt: Timestamp.now() });
-    return DEFAULT_MILK_RATE;
+    // If settings don't exist, create with default rates
+    await setDoc(settingsRef, { 
+      cow: DEFAULT_COW_RATE, 
+      buffalo: DEFAULT_BUFFALO_RATE, 
+      updatedAt: Timestamp.now() 
+    });
+    return {
+      cow: DEFAULT_COW_RATE,
+      buffalo: DEFAULT_BUFFALO_RATE,
+    };
   } catch (error) {
-    console.error('Error getting milk rate:', error);
-    return DEFAULT_MILK_RATE;
+    console.error('Error getting milk rates:', error);
+    return {
+      cow: DEFAULT_COW_RATE,
+      buffalo: DEFAULT_BUFFALO_RATE,
+    };
   }
 };
 
 /**
- * Update milk rate
+ * Update milk rate for a specific type (cow or buffalo)
+ * @param {string} type - 'cow' or 'buffalo'
+ * @param {number} newRate - The new rate value
  */
-export const updateMilkRate = async (newRate) => {
+export const updateMilkRate = async (type, newRate) => {
   try {
-    const settingsRef = doc(db, 'settings', 'milkRate');
-    await setDoc(settingsRef, { rate: newRate, updatedAt: Timestamp.now() }, { merge: true });
+    const settingsRef = doc(db, 'settings', 'milkRates');
+    await setDoc(settingsRef, { 
+      [type]: newRate, 
+      updatedAt: Timestamp.now() 
+    }, { merge: true });
   } catch (error) {
-    console.error('Error updating milk rate:', error);
+    console.error(`Error updating ${type} milk rate:`, error);
     throw error;
   }
 };
@@ -536,19 +555,28 @@ export const updateMilkRate = async (newRate) => {
  * Real-time listener for milk rate changes
  */
 export const subscribeMilkRate = (callback) => {
-  const settingsRef = doc(db, 'settings', 'milkRate');
+  const settingsRef = doc(db, 'settings', 'milkRates');
   const unsubscribe = onSnapshot(
     settingsRef,
     (snapshot) => {
       if (snapshot.exists()) {
-        callback(snapshot.data().rate || DEFAULT_MILK_RATE);
+        callback({
+          cow: snapshot.data().cow || DEFAULT_COW_RATE,
+          buffalo: snapshot.data().buffalo || DEFAULT_BUFFALO_RATE,
+        });
       } else {
-        callback(DEFAULT_MILK_RATE);
+        callback({
+          cow: DEFAULT_COW_RATE,
+          buffalo: DEFAULT_BUFFALO_RATE,
+        });
       }
     },
     (error) => {
-      console.error('Error subscribing to milk rate:', error);
-      callback(DEFAULT_MILK_RATE);
+      console.error('Error subscribing to milk rates:', error);
+      callback({
+        cow: DEFAULT_COW_RATE,
+        buffalo: DEFAULT_BUFFALO_RATE,
+      });
     }
   );
   return unsubscribe;

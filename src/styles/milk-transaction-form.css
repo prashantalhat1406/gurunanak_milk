@@ -358,3 +358,52 @@
     padding: 10px 16px;
   }
 }
+
+/* Milk Type Selector */
+.mtf-milk-type-selector {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.mtf-milk-type-selector label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.mtf-type-options {
+  display: flex;
+  gap: 12px;
+}
+
+.mtf-type-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #fafafa;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.mtf-type-option:hover {
+  border-color: #667eea;
+  background: #f5f7ff;
+}
+
+.mtf-type-option input[type="radio"] {
+  margin-right: 8px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.mtf-type-option input[type="radio"]:checked ~ span {
+  color: #667eea;
+}

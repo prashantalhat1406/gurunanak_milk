@@ -53,8 +53,14 @@ const TransactionDetailsModal = ({
 
             {transactions.length > 0 ? (
               transactions.map((transaction) => (
-                <div key={transaction.id} className="tdm-transaction-item">
+                <div
+                  key={transaction.id}
+                  className={`tdm-transaction-item tdm-transaction-${transaction.milkType || "cow"}`}
+                >
                   <div className="tdm-transaction-info">
+                    <div className="tdm-milk-type-badge">
+                      {transaction.milkType === "buffalo" ? "🐃 Buffalo" : "🐄 Cow"}
+                    </div>
                     {transaction.quantity === 0 ? (
                       <div className="tdm-no-milk">No Milk Day</div>
                     ) : (

@@ -18,12 +18,13 @@ const MilkTransactionForm = ({
   );
   const [isNoMilkDay, setIsNoMilkDay] = useState(initialQuantity === 0);
   const [errors, setErrors] = useState({});
-  const [milkRate, setMilkRate] = useState(82);
+  const [milkRates, setMilkRates] = useState({ cow: 82, buffalo: 95 });
+  const [selectedMilkType, setSelectedMilkType] = useState("cow");
 
   useEffect(() => {
     // Subscribe to milk rate changes
-    const unsubscribe = subscribeMilkRate((rate) => {
-      setMilkRate(rate);
+    const unsubscribe = subscribeMilkRate((rates) => {
+      setMilkRates(rates);
     });
 
     return () => unsubscribe();
@@ -85,8 +86,9 @@ const MilkTransactionForm = ({
       return;
     }
 
-    const amount = qty * milkRate;
-    onSubmit({ date, quantity: qty, rate: milkRate, amount });
+    const currentRate = milkRates[selectedMilkType];
+    const amount = qty * currentRate;
+    onSubmit({ date, quantity: qty, rate: currentRate, amount, milkType: selectedMilkType });
 
     if (!isEditing) {
       setDate("");
@@ -109,7 +111,7 @@ const MilkTransactionForm = ({
 
   // const displayQuantity = isNoMilkDay ? 0 : quantity ? parseFloat(quantity) : 0;
   const displayQuantity = isNoMilkDay ? 0 : Number(quantity) || 0;
-  const displayAmount = (displayQuantity * milkRate).toFixed(2);
+  const displayAmount = (displayQuantity * milkRates[selectedMilkType]).toFixed(2);
 
   const STEP_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
 
@@ -152,6 +154,33 @@ const MilkTransactionForm = ({
           onSubmit={handleSubmit}
           className="mtf-form"
         >
+          {/* Milk Type Selection */}
+          <div className="mtf-milk-type-selector">
+            <label>Milk Type</label>
+            <div className="mtf-type-options">
+              <label className="mtf-type-option">
+                <input
+                  type="radio"
+                  name="milkType"
+                  value="cow"
+                  checked={selectedMilkType === "cow"}
+                  onChange={(e) => setSelectedMilkType(e.target.value)}
+                />
+                <span>Cow (₹{milkRates.cow}/L)</span>
+              </label>
+              <label className="mtf-type-option">
+                <input
+                  type="radio"
+                  name="milkType"
+                  value="buffalo"
+                  checked={selectedMilkType === "buffalo"}
+                  onChange={(e) => setSelectedMilkType(e.target.value)}
+                />
+                <span>Buffalo (₹{milkRates.buffalo}/L)</span>
+              </label>
+            </div>
+          </div>
+
           {/* Date Field */}
           <div className="mtf-row">
             <div className="mtf-form-group">
@@ -221,7 +250,7 @@ const MilkTransactionForm = ({
           </div>
 
           <MilkSummary
-            rate={milkRate}
+            rate={milkRates[selectedMilkType]}
             quantity={displayQuantity}
             amount={displayAmount}
           />

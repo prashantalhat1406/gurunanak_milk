@@ -3,54 +3,64 @@ import "@styles/settings-modal.css";
 import { getMilkRate, updateMilkRate } from "@utils/dataService";
 
 const SettingsModal = ({ onClose }) => {
-  const [milkRate, setMilkRate] = useState(82);
-  const [tempRate, setTempRate] = useState(82);
+  const [rates, setRates] = useState({ cow: 82, buffalo: 95 });
+  const [tempRates, setTempRates] = useState({ cow: 82, buffalo: 95 });
+  const [selectedType, setSelectedType] = useState("cow");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    const fetchRate = async () => {
+    const fetchRates = async () => {
       try {
-        const rate = await getMilkRate();
-        setMilkRate(rate);
-        setTempRate(rate);
+        const rates = await getMilkRate();
+        setRates(rates);
+        setTempRates(rates);
       } catch (err) {
-        setError("Failed to load milk rate");
+        setError("Failed to load milk rates");
         console.error(err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchRate();
+    fetchRates();
   }, []);
 
   const handleSave = async () => {
-    if (!tempRate || tempRate <= 0) {
-      setError("Please enter a valid milk rate");
+    const currentRate = tempRates[selectedType];
+    
+    if (!currentRate || currentRate <= 0) {
+      setError(`Please enter a valid ${selectedType} milk rate`);
       return;
     }
 
     try {
       setError("");
       setSuccess("");
-      await updateMilkRate(tempRate);
-      setMilkRate(tempRate);
-      setSuccess("Milk rate updated successfully!");
+      await updateMilkRate(selectedType, currentRate);
+      setRates(tempRates);
+      setSuccess(`${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} milk rate updated successfully!`);
       setTimeout(() => {
         onClose();
       }, 1000);
     } catch (err) {
-      setError("Failed to update milk rate");
+      setError(`Failed to update ${selectedType} milk rate`);
       console.error(err);
     }
   };
 
   const handleCancel = () => {
-    setTempRate(milkRate);
+    setTempRates(rates);
     setError("");
     setSuccess("");
+  };
+
+  const handleRateChange = (type, value) => {
+    setTempRates({
+      ...tempRates,
+      [type]: parseFloat(value) || 0,
+    });
   };
 
   return (
@@ -68,19 +78,60 @@ const SettingsModal = ({ onClose }) => {
             <p>Loading settings...</p>
           ) : (
             <>
+              {/* Milk Type Selection */}
               <div className="settings-section">
-                <label htmlFor="milk-rate-input">Milk Rate (₹/Liter)</label>
+                <label>Select Milk Type</label>
+                <div className="milk-type-selector">
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="milkType"
+                      value="cow"
+                      checked={selectedType === "cow"}
+                      onChange={(e) => setSelectedType(e.target.value)}
+                    />
+                    <span>Cow Milk</span>
+                  </label>
+                  <label className="radio-option">
+                    <input
+                      type="radio"
+                      name="milkType"
+                      value="buffalo"
+                      checked={selectedType === "buffalo"}
+                      onChange={(e) => setSelectedType(e.target.value)}
+                    />
+                    <span>Buffalo Milk</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Rate Input */}
+              <div className="settings-section">
+                <label htmlFor="milk-rate-input">
+                  {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} Milk Rate (₹/Liter)
+                </label>
                 <input
                   id="milk-rate-input"
                   type="number"
                   className="settings-input"
-                  value={tempRate}
-                  onChange={(e) => setTempRate(parseFloat(e.target.value) || 0)}
+                  value={tempRates[selectedType]}
+                  onChange={(e) => handleRateChange(selectedType, e.target.value)}
                   step="0.50"
                   min="0"
                 />
                 <p className="settings-description">
-                  Current rate: ₹{milkRate}/L
+                  Current {selectedType} rate: ₹{rates[selectedType]}/L
+                </p>
+              </div>
+
+              {/* Rate Summary */}
+              <div className="settings-section settings-summary">
+                <p className="summary-title">Current Rates:</p>
+                <p className="summary-item">
+                  <strong>Cow:</strong> ₹{rates.cow}/L
+                </p>
+                <p className="summary-item">
+                  <strong>Buffalo:</strong> ₹{rates.buffalo}/L
                 </p>
               </div>
 
@@ -101,7 +152,7 @@ const SettingsModal = ({ onClose }) => {
           <button
             className="settings-btn settings-btn-save"
             onClick={handleSave}
-            disabled={loading || tempRate === milkRate}
+            disabled={loading || tempRates[selectedType] === rates[selectedType]}
           >
             Save
           </button>

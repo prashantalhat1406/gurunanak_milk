@@ -123,10 +123,49 @@
   background: #f5f5f5;
 }
 
+/* Milk Type Variants */
+.tdm-transaction-cow {
+  border-left: 5px solid #8b4513;
+  background: linear-gradient(135deg, #fff8f3 0%, #ffe8d6 100%);
+}
+
+.tdm-transaction-cow:hover {
+  background: linear-gradient(135deg, #fff0e6 0%, #ffd9b3 100%);
+}
+
+.tdm-transaction-buffalo {
+  border-left: 5px solid #333333;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+}
+
+.tdm-transaction-buffalo:hover {
+  background: linear-gradient(135deg, #f0f0f0 0%, #dcdcdc 100%);
+}
+
 /* Info */
 .tdm-transaction-info {
   font-size: 14px;
   color: #333;
+}
+
+/* Milk Type Badge */
+.tdm-milk-type-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 6px;
+}
+
+.tdm-transaction-cow .tdm-milk-type-badge {
+  background-color: #daa520;
+  color: #ffffff;
+}
+
+.tdm-transaction-buffalo .tdm-milk-type-badge {
+  background-color: #333333;
+  color: #ffffff;
 }
 
 /* No milk */
