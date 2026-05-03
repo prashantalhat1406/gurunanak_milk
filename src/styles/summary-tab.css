@@ -70,7 +70,7 @@
 
 .summary-table th {
   padding: 14px;
-  text-align: left;
+  text-align: center;
   font-weight: 600;
   color: #333;
   white-space: nowrap;
@@ -104,26 +104,36 @@
 
 /* Table Data */
 .summary-table td {
-  padding: 14px;
+  padding: 8px;
   color: #333;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .month-cell {
   font-weight: 600;
   color: #333;
+  text-align: center;
 }
 
 /* Milk Details */
+
 .milk-detail {
-  display: flex;
+  display: grid;
+  grid-template-columns: 40px 50px 80px; 
+  /* emoji | qty | amount */
   align-items: center;
+  justify-content: center; 
   gap: 6px;
-  margin-bottom: 4px;
-  font-weight: 500;
 }
 
 .milk-badge {
   font-size: 1.1rem;
+  text-align: center;
+}
+
+.milk-quantity{
+    text-align: left;
 }
 
 .milk-amount {
@@ -131,13 +141,15 @@
   font-size: 0.85rem;
   color: #666;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: left;
 }
 
 /* Amount Cell */
 .amount-cell {
   font-weight: 600;
-  color: #1565c0;
-  text-align: right;
+  color: #1565c0;  
+  text-align: center;
 }
 
 /* Payment Cell */
@@ -194,13 +206,13 @@
 .pending-amount {
   font-weight: 700;
   color: #d32f2f;
-  text-align: right;
+  text-align: center;
 }
 
 .settled-amount {
   font-weight: 700;
   color: #2e7d32;
-  text-align: right;
+  text-align: center;
 }
 
 /* Empty State */
