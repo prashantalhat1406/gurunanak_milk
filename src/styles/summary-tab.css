@@ -1,0 +1,241 @@
+/* ============================================
+   Summary Tab - Monthly Payment Overview
+   ============================================ */
+
+.summary-tab-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Total Pending Summary Box */
+.summary-pending-box {
+  color: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Pending State - Red */
+.summary-pending-box.pending-mode {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+/* Advance State - Green */
+.summary-pending-box.advance-mode {
+  background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+.summary-pending-title {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  opacity: 0.95;
+  letter-spacing: 0.5px;
+}
+
+.summary-pending-amount {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+/* Table Wrapper */
+.summary-table-wrapper {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  overflow-x: auto;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Table */
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.summary-table thead {
+  background: linear-gradient(135deg, #f5f7ff 0%, #e8ebf7 100%);
+  border-bottom: 2px solid #667eea;
+}
+
+.summary-table th {
+  padding: 14px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.summary-table tbody tr {
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.2s ease;
+}
+
+.summary-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+/* Row Variants */
+.pending-row {
+  background-color: #fffbf0;
+}
+
+.pending-row:hover {
+  background-color: #fff5e6;
+}
+
+.settled-row {
+  background-color: #f0fff4;
+}
+
+.settled-row:hover {
+  background-color: #e6ffe6;
+}
+
+/* Table Data */
+.summary-table td {
+  padding: 14px;
+  color: #333;
+}
+
+.month-cell {
+  font-weight: 600;
+  color: #333;
+}
+
+/* Milk Details */
+.milk-detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.milk-badge {
+  font-size: 1.1rem;
+}
+
+.milk-amount {
+  display: block;
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: 600;
+}
+
+/* Amount Cell */
+.amount-cell {
+  font-weight: 600;
+  color: #1565c0;
+  text-align: right;
+}
+
+/* Payment Cell */
+.payment-cell {
+  padding: 12px 14px;
+}
+
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.payment-details strong {
+  color: #2e7d32;
+  font-size: 0.95rem;
+}
+
+.payment-list {
+  font-size: 0.8rem;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  color: #666;
+  margin: 2px 0;
+}
+
+.payment-date {
+  font-weight: 500;
+}
+
+.payment-amount {
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.payment-method {
+  color: #999;
+  font-style: italic;
+}
+
+.no-payment {
+  color: #999;
+  font-style: italic;
+}
+
+/* Pending/Settled Amounts */
+.pending-amount {
+  font-weight: 700;
+  color: #d32f2f;
+  text-align: right;
+}
+
+.settled-amount {
+  font-weight: 700;
+  color: #2e7d32;
+  text-align: right;
+}
+
+/* Empty State */
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 40px 14px !important;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .summary-table-wrapper {
+    font-size: 0.8rem;
+  }
+
+  .summary-table th,
+  .summary-table td {
+    padding: 10px;
+  }
+
+  .summary-pending-amount {
+    font-size: 1.8rem;
+  }
+
+  .summary-pending-box {
+    padding: 16px;
+  }
+
+  .milk-detail {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .payment-list {
+    display: none;
+  }
+}

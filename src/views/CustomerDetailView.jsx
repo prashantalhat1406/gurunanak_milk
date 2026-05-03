@@ -4,6 +4,7 @@ import MilkTransactionForm from "@components/milk/AddMilkTransactionForm";
 import MilkCalendarView from "@components/milk/MilkCalendarView";
 import PaymentHistory from "@components/payments/PaymentHistory";
 import AddPaymentForm from "@components/payments/AddPaymentForm";
+import SummaryTab from "@components/payments/SummaryTab";
 import styles from "../App.module.css";
 
 export default function CustomerDetailView({
@@ -90,6 +91,12 @@ export default function CustomerDetailView({
             >
               Payment History
             </button>
+            <button
+              className={`tab-button ${activeTab === "summary" ? "active" : ""}`}
+              onClick={() => setActiveTab("summary")}
+            >
+              Summary
+            </button>
           </div>
         </div>
 
@@ -122,6 +129,13 @@ export default function CustomerDetailView({
                 onEdit={onEditPayment}
                 onDelete={onDeletePayment}
               />
+            </div>
+          )}
+
+          {/* Summary Tab */}
+          {activeTab === "summary" && (
+            <div className="summary-section">
+              <SummaryTab customer={customer} />
             </div>
           )}
         </div>
