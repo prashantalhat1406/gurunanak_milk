@@ -4,8 +4,10 @@ send information to user via sms or whatsapp
 date format should be dd-mmm-yyyy on calander
 payment information should show all payments , what is due
 add home delivery rate in setting modal
-this should be stored at customer level when adding customer
-add column in summary tab, add rate and then total amount should be calculated
+home delivery amount should be stored at customer level when adding customer
+add home delivery amount column in summary tab, add rate and then total amount should be calculated
+add month navigation to payment history screen
+BUG: calander should always open up in current month
 
 
 
