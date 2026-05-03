@@ -44,7 +44,7 @@
 
 .tab-button:hover {
   color: #0f172a;
-  background: rgba(239, 239, 118, 0.6);
+  background: rgba(108, 200, 246, 0.6);
 }
 
 .tab-button.active {
@@ -52,6 +52,7 @@
   color: white;
   border-radius: 999px; /* 👈 important */
   box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  font-size: medium;
 }
 
 /* Optional: subtle press effect */

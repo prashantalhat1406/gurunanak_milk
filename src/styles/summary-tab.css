@@ -74,6 +74,7 @@
   font-weight: 600;
   color: #333;
   white-space: nowrap;
+  border-right: 1px solid #e0e0e0;
 }
 
 .summary-table tbody tr {
@@ -104,10 +105,11 @@
 
 /* Table Data */
 .summary-table td {
-  padding: 8px;
+  /* padding: 8px; */
   color: #333;
   text-align: center;
   vertical-align: middle;
+  border-right: 1px solid #e0e0e0;
 }
 
 .month-cell {
@@ -120,11 +122,12 @@
 
 .milk-detail {
   display: grid;
-  grid-template-columns: 40px 50px 80px; 
+  grid-template-columns: 30px 80px; 
   /* emoji | qty | amount */
   align-items: center;
   justify-content: center; 
-  gap: 6px;
+  gap: 15px;
+  
 }
 
 .milk-badge {
@@ -142,7 +145,7 @@
   color: #666;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  text-align: left;
+  text-align: right;
 }
 
 /* Amount Cell */
