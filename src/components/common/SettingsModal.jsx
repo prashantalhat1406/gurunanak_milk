@@ -54,6 +54,7 @@ const SettingsModal = ({ onClose }) => {
     setTempRates(rates);
     setError("");
     setSuccess("");
+    onClose();
   };
 
   const handleRateChange = (type, value) => {
@@ -119,9 +120,9 @@ const SettingsModal = ({ onClose }) => {
                   step="0.50"
                   min="0"
                 />
-                <p className="settings-description">
+                {/* <p className="settings-description">
                   Current {selectedType} rate: ₹{rates[selectedType]}/L
-                </p>
+                </p> */}
               </div>
 
               {/* Rate Summary */}
