@@ -8,14 +8,91 @@
   overflow: hidden;
 }
 
-.payment-history-header {
+/* =========================
+   Month Navigation
+========================= */
+
+.payment-history-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 12px 15px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 12px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.payment-history-month-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  transition: background 0.2s;
+  border: none;
+  color: #333;
+}
+
+.payment-history-month-title:hover {
+  background: #e0e0e0;
+}
+
+/* Month picker dropdown */
+.payment-history-month-picker {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 6px;
+  background: #fff;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+}
+
+.payment-history-month-picker input {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+/* Navigation buttons */
+.payment-history-nav .nav-button {
+  background: #667eea;
   color: white;
-  border-bottom: 2px solid #e0e0e0;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  min-width: 40px;
+}
+
+.payment-history-nav .nav-button:hover {
+  background: #764ba2;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.payment-history-nav .nav-button:active {
+  transform: scale(0.95);
+}
+
+.payment-history-header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 12px 20px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
 }
 
 .payment-history-header h3 {
@@ -26,8 +103,8 @@
 
 .btn-add-payment {
   padding: 8px 12px;
-  background: white;
-  color: #667eea;
+  background: #667eea;
+  color: white;
   border: none;
   border-radius: 4px;
   font-size: 14px;
@@ -37,7 +114,7 @@
 }
 
 .btn-add-payment:hover {
-  background: #f0f0f0;
+  background: #764ba2;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -45,6 +122,7 @@
   padding: 12px 15px;
   background: white;
   border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
 }
 
 .consumption-card {

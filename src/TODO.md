@@ -6,8 +6,9 @@ payment information should show all payments , what is due
 add home delivery rate in setting modal
 home delivery amount should be stored at customer level when adding customer
 add home delivery amount column in summary tab, add rate and then total amount should be calculated
-add month navigation to payment history screen
 BUG: calander should always open up in current month
+search should be based on customer ID
+add milk form background color should change as per radio selection (cow, buffalo)
 
 
 
@@ -29,3 +30,4 @@ BUG: calander should always open up in current month
 * user should be able to add cow as well as buffelo milk
 * make calandaer and payment history show as 2 tabs instead of showing side by side
 * add provision for cow milk price in settings
+* add month navigation to payment history screen

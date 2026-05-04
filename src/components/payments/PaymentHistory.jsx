@@ -2,16 +2,67 @@ import React, { useState } from "react";
 import "@styles/payment-history.css";
 import ConfirmDialog from "@components/modals/ConfirmDialog";
 import PaymentItem from "@components/payments/PaymentItem.jsx";
+import { getMonthMeta } from "../../utils/calandar-utils";
 
 const PaymentHistory = ({
   payments,
   milkTransactions,
-  selectedMonth,
   onAdd,
   onEdit,
   onDelete,
 }) => {
   const [confirmData, setConfirmData] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
+  const [showMonthPicker, setShowMonthPicker] = useState(false);
+
+  // Helper function to get current month in YYYY-MM format
+  function getCurrentMonth() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    return `${year}-${month}`;
+  }
+
+  // Get month metadata
+  const { year, month } = getMonthMeta(selectedMonth);
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const monthName = monthNames[month - 1];
+
+  // Month navigation handlers
+  const handlePrevMonth = () => {
+    const [y, m] = selectedMonth.split("-").map(Number);
+    const prevDate = new Date(y, m - 2, 1);
+    const newYear = prevDate.getFullYear();
+    const newMonth = String(prevDate.getMonth() + 1).padStart(2, "0");
+    setSelectedMonth(`${newYear}-${newMonth}`);
+  };
+
+  const handleNextMonth = () => {
+    const [y, m] = selectedMonth.split("-").map(Number);
+    const nextDate = new Date(y, m, 1);
+    const newYear = nextDate.getFullYear();
+    const newMonth = String(nextDate.getMonth() + 1).padStart(2, "0");
+    setSelectedMonth(`${newYear}-${newMonth}`);
+  };
+
+  const handleMonthChange = (newMonth) => {
+    setSelectedMonth(newMonth);
+    setShowMonthPicker(false);
+  };
+
   // Filter payments for the selected month
   const filteredPayments = payments.filter((p) =>
     p.date.startsWith(selectedMonth),
@@ -88,8 +139,38 @@ const PaymentHistory = ({
         onConfirm={confirmData?.onConfirm}
         onCancel={() => setConfirmData(null)}
       />
+
+      {/* MONTH NAVIGATION */}
+      <div className="payment-history-nav">
+        <button onClick={handlePrevMonth} className="nav-button">
+          ←
+        </button>
+
+        <h2
+          className="payment-history-month-title"
+          onClick={() => setShowMonthPicker((s) => !s)}
+        >
+          {monthName} {year}
+        </h2>
+
+        <button onClick={handleNextMonth} className="nav-button">
+          →
+        </button>
+
+        {/* Month Picker */}
+        {showMonthPicker && (
+          <div className="payment-history-month-picker">
+            <input
+              type="month"
+              value={selectedMonth}
+              onChange={(e) => handleMonthChange(e.target.value)}
+              autoFocus
+            />
+          </div>
+        )}
+      </div>
+
       <div className="payment-history-header">
-        {/* <h3>Payment History</h3> */}
         <button
           className="btn-add-payment"
           onClick={onAdd}

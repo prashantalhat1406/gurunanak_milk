@@ -124,7 +124,6 @@ export default function CustomerDetailView({
               <PaymentHistory
                 payments={customer?.payments || []}
                 milkTransactions={filteredTransactions}
-                selectedMonth={selectedMonth}
                 onAdd={onAddPaymentClick}
                 onEdit={onEditPayment}
                 onDelete={onDeletePayment}
