@@ -1,14 +1,13 @@
 customer card should show pending amount. This amount is total amount - amount paid by customer
 add role based entry
 send information to user via sms or whatsapp
+search should be based on customer ID
 date format should be dd-mmm-yyyy on calander
 payment information should show all payments , what is due
-add home delivery rate in setting modal
-home delivery amount should be stored at customer level when adding customer
-add home delivery amount column in summary tab, add rate and then total amount should be calculated
 BUG: calander should always open up in current month
-search should be based on customer ID
-add milk form background color should change as per radio selection (cow, buffalo)
+BUG: home delivery status is not correctly shown when customer is edited
+
+
 
 
 
@@ -31,3 +30,7 @@ add milk form background color should change as per radio selection (cow, buffal
 * make calandaer and payment history show as 2 tabs instead of showing side by side
 * add provision for cow milk price in settings
 * add month navigation to payment history screen
+* add milk form background color should change as per radio selection (cow, buffalo)
+* add home delivery rate in setting modal
+* home delivery amount should be stored at customer level when adding customer
+* add home delivery amount column in summary tab, add rate and then total amount should be calculated

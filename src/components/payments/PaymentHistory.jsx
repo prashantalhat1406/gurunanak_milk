@@ -171,40 +171,41 @@ const PaymentHistory = ({
       </div>
 
       <div className="payment-history-header">
-        <button
-          className="btn-add-payment"
-          onClick={onAdd}
-          title="Add new payment"
-        >
-          + Add Payment
-        </button>
-      </div>
-
-      <div className="monthly-consumption">
-        <div className="consumption-card">
-          <span className="consumption-label">Summary</span>
-          <div className="consumption-details">
-            <div className="detail-item">
-              <span className="detail-label">Qty:</span>
-              <span className="detail-value">{monthlyMilkQty} L</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Amount:</span>
-              <span className="detail-value">₹{monthlyMilkAmount}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Paid:</span>
-              <span className="detail-value">₹{totalPaid}</span>
-            </div>
-            <div className="detail-item">
-              <span className="detail-label">Outstanding:</span>
-              <span
-                className={`detail-value ${balance > 0 ? "pending" : "clear"}`}
-              >
-                ₹{balance > 0 ? balance : 0}
-              </span>
+        <div className="monthly-consumption">
+          <div className="consumption-card">
+            {/* <span className="consumption-label">Summary</span> */}
+            <div className="consumption-details">
+              <div className="detail-item">
+                <span className="detail-label">Qty:</span>
+                <span className="detail-value">{monthlyMilkQty} L</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Amount:</span>
+                <span className="detail-value">₹{monthlyMilkAmount}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Paid:</span>
+                <span className="detail-value">₹{totalPaid}</span>
+              </div>
+              <div className="detail-item">
+                <span className="detail-label">Outstanding:</span>
+                <span
+                  className={`detail-value ${balance > 0 ? "pending" : "clear"}`}
+                >
+                  ₹{balance > 0 ? balance : 0}
+                </span>
+              </div>
             </div>
           </div>
+        </div>
+        <div className="payment-history-add-button">
+          <button
+            className="btn-add-payment"
+            onClick={onAdd}
+            title="Add new payment"
+          >
+            + Add Payment
+          </button>
         </div>
       </div>
 
