@@ -122,8 +122,8 @@ const MilkTransactionForm = ({
       onClick={onCancel}
     >
       <div
-        id="milk-transaction-modal-card"
-        className="mtf-card"
+        id="milk-transaction-modal-card"        
+        className={`mtf-card mtf-card--${selectedMilkType}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
