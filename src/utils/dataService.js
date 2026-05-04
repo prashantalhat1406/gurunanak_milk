@@ -581,3 +581,66 @@ export const subscribeMilkRate = (callback) => {
   );
   return unsubscribe;
 };
+
+/**
+ * Get home delivery charges from settings
+ */
+export const getHomeDeliveryCharges = async () => {
+  try {
+    const settingsRef = doc(db, 'settings', 'homeDelivery');
+    const settingsDoc = await getDoc(settingsRef);
+    
+    if (settingsDoc.exists()) {
+      return settingsDoc.data().charges || 0;
+    }
+    
+    // If settings don't exist, create with default (0)
+    await setDoc(settingsRef, { 
+      charges: 0, 
+      updatedAt: Timestamp.now() 
+    });
+    return 0;
+  } catch (error) {
+    console.error('Error getting home delivery charges:', error);
+    return 0;
+  }
+};
+
+/**
+ * Update home delivery charges
+ * @param {number} charges - The new home delivery charges
+ */
+export const updateHomeDeliveryCharges = async (charges) => {
+  try {
+    const settingsRef = doc(db, 'settings', 'homeDelivery');
+    await setDoc(settingsRef, { 
+      charges: charges, 
+      updatedAt: Timestamp.now() 
+    }, { merge: true });
+  } catch (error) {
+    console.error('Error updating home delivery charges:', error);
+    throw error;
+  }
+};
+
+/**
+ * Real-time listener for home delivery charges changes
+ */
+export const subscribeHomeDeliveryCharges = (callback) => {
+  const settingsRef = doc(db, 'settings', 'homeDelivery');
+  const unsubscribe = onSnapshot(
+    settingsRef,
+    (snapshot) => {
+      if (snapshot.exists()) {
+        callback(snapshot.data().charges || 0);
+      } else {
+        callback(0);
+      }
+    },
+    (error) => {
+      console.error('Error subscribing to home delivery charges:', error);
+      callback(0);
+    }
+  );
+  return unsubscribe;
+};

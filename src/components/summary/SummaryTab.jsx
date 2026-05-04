@@ -1,8 +1,23 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import "@styles/summary-tab.css";
 import SummaryItem from "@components/summary/SummaryItem.jsx";
+import { getHomeDeliveryCharges } from "@utils/dataService";
 
 const SummaryTab = ({ customer }) => {
+  const [homeDeliveryCharges, setHomeDeliveryCharges] = useState(0);
+
+  useEffect(() => {
+    const loadHomeDeliveryCharges = async () => {
+      try {
+        const charges = await getHomeDeliveryCharges();
+        setHomeDeliveryCharges(charges);
+      } catch (err) {
+        console.error("Error loading home delivery charges:", err);
+      }
+    };
+    loadHomeDeliveryCharges();
+  }, []);
+
   const summaryData = useMemo(() => {
     const transactions = customer?.milkTransactions || [];
     const payments = customer?.payments || [];
@@ -20,6 +35,8 @@ const SummaryTab = ({ customer }) => {
           cowAmount: 0,
           buffaloMilk: 0,
           buffaloAmount: 0,
+          milkTotal: 0,
+          homeDeliveryCharges: customer?.homeDelivery ? homeDeliveryCharges : 0,
           totalAmount: 0,
           payments: [],
           totalPaid: 0,
@@ -33,7 +50,8 @@ const SummaryTab = ({ customer }) => {
         monthMap[monthKey].cowMilk += tx.quantity;
         monthMap[monthKey].cowAmount += tx.amount;
       }
-      monthMap[monthKey].totalAmount += tx.amount;
+      monthMap[monthKey].milkTotal += tx.amount;
+      monthMap[monthKey].totalAmount = monthMap[monthKey].milkTotal + monthMap[monthKey].homeDeliveryCharges;
     });
 
     // Process payments
@@ -46,6 +64,8 @@ const SummaryTab = ({ customer }) => {
           cowAmount: 0,
           buffaloMilk: 0,
           buffaloAmount: 0,
+          milkTotal: 0,
+          homeDeliveryCharges: customer?.homeDelivery ? homeDeliveryCharges : 0,
           totalAmount: 0,
           payments: [],
           totalPaid: 0,
@@ -61,7 +81,7 @@ const SummaryTab = ({ customer }) => {
     );
 
     return sorted;
-  }, [customer]);
+  }, [customer, homeDeliveryCharges]);
 
   const calculateTotalPending = () => {
     return summaryData.reduce(
@@ -102,6 +122,8 @@ const SummaryTab = ({ customer }) => {
               <th>Month</th>
               <th>Cow Milk</th>
               <th>Buffalo Milk</th>
+              <th>Milk Total</th>
+              {customer?.homeDelivery && <th>Home Delivery</th>}
               <th>Total Amount</th>
               <th>Payment Received</th>
               <th>Pending</th>
@@ -114,11 +136,12 @@ const SummaryTab = ({ customer }) => {
                   key={month.month}
                   month={month}
                   formatMonthName={formatMonthName}
+                  hasHomeDelivery={customer?.homeDelivery}
                 />
               ))
             ) : (
               <tr>
-                <td colSpan="6" className="empty-message">
+                <td colSpan={customer?.homeDelivery ? 8 : 7} className="empty-message">
                   No transactions or payments yet
                 </td>
               </tr>

@@ -6,23 +6,31 @@ const AddCustomerModal = ({
   onCancel,
   initialName = "",
   initialPhone = "",
+  initialHomeDelivery = false,
   isEditing = false,
 }) => {
   const [name, setName] = useState(initialName);
   const [phone, setPhone] = useState(initialPhone);
+  const [homeDelivery, setHomeDelivery] = useState(initialHomeDelivery);
 
   useEffect(() => {
     setName(initialName);
     setPhone(initialPhone);
-  }, [initialName, initialPhone]);
+    setHomeDelivery(initialHomeDelivery);
+  }, [initialName, initialPhone, initialHomeDelivery]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name.trim() && phone.trim()) {
-      onSubmit({ name: name.trim(), mobile: phone.trim() });
+      onSubmit({ 
+        name: name.trim(), 
+        mobile: phone.trim(),
+        homeDelivery: homeDelivery
+      });
       if (!isEditing) {
         setName("");
         setPhone("");
+        setHomeDelivery(false);
       }
     }
   };
@@ -80,6 +88,16 @@ const AddCustomerModal = ({
               required
             />
             <label>Phone</label>
+          </div>
+
+          <div className="checkbox-field">
+            <input
+              type="checkbox"
+              id="homeDelivery"
+              checked={homeDelivery}
+              onChange={(e) => setHomeDelivery(e.target.checked)}
+            />
+            <label htmlFor="homeDelivery">🏠 Home Delivery</label>
           </div>
 
           <div className="modal-actions">

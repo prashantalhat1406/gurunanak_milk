@@ -57,6 +57,7 @@ export default function CustomerListView({
           onCancel={onCancelCustomer}
           initialName={editingCustomer?.name || ""}
           initialPhone={editingCustomer?.mobile || ""}
+          initialHomeDelivery={editingCustomer?.homeDelivery || false}
           isEditing={!!editingCustomer}
         />
       )}
