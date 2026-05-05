@@ -1,5 +1,6 @@
 ﻿import React, { useState } from "react";
 import TransactionDetailsModal from "./MilkTransactionDetailsModal";
+import MilkMonthSummary from "./MilkMonthSummary";
 import "@styles/milk-calendar.css";
 
 import { getMonthMeta, buildCalendarDays } from "../../utils/calandar-utils";
@@ -98,6 +99,9 @@ const MilkCalendarView = ({
 
   return (
     <div className="mcal-container">
+      
+      
+
       {/* NAVIGATION */}
       <div className="mcal-nav">
         <button onClick={onPrevMonth} className="nav-button">
@@ -129,7 +133,9 @@ const MilkCalendarView = ({
             />
           </div>
         )}
-      </div>
+      </div>  
+
+      <MilkMonthSummary transactions={transactions} />    
 
       {/* CALENDAR GRID */}
       <div className="mcal-grid">
@@ -154,7 +160,7 @@ const MilkCalendarView = ({
           const dateStr = formatDate(year, month, day);
           const dayTx = transactionsMap[dateStr] || [];
 
-          const { hasMilk, hasNoMilk, milk, amount } = getDaySummary(dayTx);
+          const { hasMilk, hasNoMilk, milk } = getDaySummary(dayTx);
 
           const isToday = dateStr === todayStr;
 

@@ -4,8 +4,7 @@ send information to user via sms or whatsapp
 search should be based on customer ID
 date format should be dd-mmm-yyyy on calander
 payment information should show all payments , what is due
-BUG: calander should always open up in current month
-BUG: home delivery status is not correctly shown when customer is edited
+
 
 
 
@@ -34,3 +33,5 @@ BUG: home delivery status is not correctly shown when customer is edited
 * add home delivery rate in setting modal
 * home delivery amount should be stored at customer level when adding customer
 * add home delivery amount column in summary tab, add rate and then total amount should be calculated
+* BUG: calander should always open up in current month
+* BUG: home delivery status is not correctly shown when customer is edited

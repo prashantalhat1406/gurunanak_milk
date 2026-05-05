@@ -1,0 +1,51 @@
+.milk-month-summary {
+  padding: 12px 15px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.consumption-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.consumption-details {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.detail-item {
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-value {
+  color: #667eea;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .milk-month-summary {
+    padding: 10px 12px;
+  }
+
+  .consumption-card {
+    padding: 10px;
+  }
+
+  .consumption-details {
+    gap: 12px;
+    font-size: 12px;
+  }
+}

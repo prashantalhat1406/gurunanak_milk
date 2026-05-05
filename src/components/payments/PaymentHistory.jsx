@@ -197,8 +197,6 @@ const PaymentHistory = ({
               </div>
             </div>
           </div>
-        </div>
-        <div className="payment-history-add-button">
           <button
             className="btn-add-payment"
             onClick={onAdd}
