@@ -39,7 +39,7 @@ function App() {
     useCustomers();
 
   const { selectedMonth, setSelectedMonth, handlePrevMonth, handleNextMonth } =
-    useMonthNavigation("2026-04");
+    useMonthNavigation();
 
   const detail = useCustomerDetail(selectedCustomer, setSelectedMonth);
 
@@ -93,6 +93,10 @@ function App() {
       const full = await fetchCustomerDetails(customer.id);
       setSelectedCustomer(full);
       setViewMode("detail");
+      // Reset to current month when opening detail view
+      const today = new Date();
+      const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
+      setSelectedMonth(currentMonth);
     } catch {
       alert("Failed to load customer details. Please try again.");
     }

@@ -21,8 +21,16 @@ function formatMonthLabel(value) {
   return { value, label: `${MONTH_NAMES[parseInt(monthNum) - 1]} ${year}` };
 }
 
-export function useMonthNavigation(initialMonth = "2026-04") {
-  const [selectedMonth, setSelectedMonth] = useState(initialMonth);
+function getCurrentMonth() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+  return `${year}-${month}`;
+}
+
+export function useMonthNavigation(initialMonth) {
+  const defaultMonth = initialMonth || getCurrentMonth();
+  const [selectedMonth, setSelectedMonth] = useState(defaultMonth);
 
   const handlePrevMonth = () => {
     const [year, month] = selectedMonth.split("-").map(Number);
