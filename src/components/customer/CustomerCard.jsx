@@ -8,11 +8,12 @@ const CustomerCard = ({
   mobile,
   totalMilk,
   totalAmount,
+  homeDelivery,
   onEdit,
   onClick,
   onAddMilk,
 }) => {
-  const customerData = { id, customerID, name, mobile, totalMilk, totalAmount };
+  const customerData = { id, customerID, name, mobile, totalMilk, totalAmount, homeDelivery };
 
   return (
     <div

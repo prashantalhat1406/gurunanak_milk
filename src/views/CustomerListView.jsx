@@ -83,6 +83,7 @@ export default function CustomerListView({
             mobile={customer.mobile}
             totalMilk={customer.totalMilk}
             totalAmount={customer.totalAmount}
+            homeDelivery={customer.homeDelivery}
             onEdit={onEditCustomer}
             onClick={onCustomerClick}
             onAddMilk={onAddMilk}
