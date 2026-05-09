@@ -88,10 +88,16 @@ const MilkCalendarView = ({
   const getDaySummary = (transactions) => {
     const hasMilk = transactions.some((t) => t.quantity > 0);
     const hasNoMilk = transactions.some((t) => t.quantity === 0);
+    
+    // Track milk types
+    const hasBuffalo = transactions.some((t) => t.quantity > 0 && t.milkType === "buffalo");
+    const hasCow = transactions.some((t) => t.quantity > 0 && t.milkType === "cow");
 
     return {
       hasMilk,
       hasNoMilk,
+      hasBuffalo,
+      hasCow,
       milk: transactions.reduce((s, t) => s + t.quantity, 0),
       amount: transactions.reduce((s, t) => s + t.amount, 0),
     };
@@ -160,7 +166,7 @@ const MilkCalendarView = ({
           const dateStr = formatDate(year, month, day);
           const dayTx = transactionsMap[dateStr] || [];
 
-          const { hasMilk, hasNoMilk, milk } = getDaySummary(dayTx);
+          const { hasMilk, hasNoMilk, hasBuffalo, hasCow, milk } = getDaySummary(dayTx);
 
           const isToday = dateStr === todayStr;
 
@@ -170,7 +176,13 @@ const MilkCalendarView = ({
           if (hasNoMilk && !hasMilk) {
             cellClass += " mcal-cell-no-milk";
           } else if (hasMilk) {
-            cellClass += " mcal-cell-milk";
+            if (hasBuffalo && hasCow) {
+              cellClass += " mcal-cell-both-milk";
+            } else if (hasBuffalo) {
+              cellClass += " mcal-cell-buffalo-milk";
+            } else if (hasCow) {
+              cellClass += " mcal-cell-cow-milk";
+            }
           }
 
           return (
