@@ -454,7 +454,9 @@
 
 .payment-row--inline {
   display: flex;
-  gap: 16px;
+  gap: 26px;
+  margin-left: 30px;
+
 }
 
 .payment-col {

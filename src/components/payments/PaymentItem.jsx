@@ -1,4 +1,6 @@
 import React from "react";
+import { FiEdit2 } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
 const PaymentItem = ({
   payment,
   onEdit,
@@ -42,7 +44,7 @@ const PaymentItem = ({
           onClick={() => onEdit(payment.id)}
           title="Edit payment"
         >
-          ✎
+          <FiEdit2 />
         </button>
 
         <button
@@ -50,7 +52,7 @@ const PaymentItem = ({
           onClick={() => onDelete(payment)}
           title="Delete payment"
         >
-          ✕
+          <FiTrash2 />
         </button>
       </div>
     </div>
