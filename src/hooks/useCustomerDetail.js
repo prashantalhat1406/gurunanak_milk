@@ -21,6 +21,16 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
   const [showPaymentForm, setShowPaymentForm]       = useState(false);
   const [editingPaymentId, setEditingPaymentId] = useState(null);
 
+  // --- Confirmation dialog state ---
+  const [confirmDialog, setConfirmDialog] = useState({
+    open: false,
+    type: null, // 'transaction' or 'payment'
+    itemId: null,
+    item: null,
+    title: "",
+    message: "",
+  });
+
   // Real-time subscriptions for selected customer
   const [localCustomer, setLocalCustomer] = useState(selectedCustomer);
 
@@ -64,9 +74,15 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
     setShowTransactionForm(true);
   };
 
-  const handleDeleteTransaction = async (transaction) => {
-    if (!window.confirm("Are you sure you want to delete this transaction?")) return;
-    await deleteTransaction(transaction.id, localCustomer.id, transaction);
+  const handleDeleteTransaction = (transaction) => {
+    setConfirmDialog({
+      open: true,
+      type: 'transaction',
+      itemId: transaction.id,
+      item: transaction,
+      title: "Delete Transaction",
+      message: "Are you sure you want to delete this transaction?",
+    });
   };
 
   const handleAddTransactionFromCalendar = (dateStr) => {
@@ -96,12 +112,16 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
     setShowPaymentForm(true);
   };
 
-  const handleDeletePayment = async (paymentId) => {
-    if (!window.confirm("Are you sure you want to delete this payment?")) return;
+  const handleDeletePayment = (paymentId) => {
     const payment = localCustomer.payments.find((p) => p.id === paymentId);
-    if (payment) {
-      await deletePayment(paymentId, localCustomer.id, payment);
-    }
+    setConfirmDialog({
+      open: true,
+      type: 'payment',
+      itemId: paymentId,
+      item: payment,
+      title: "Delete Payment",
+      message: "Are you sure you want to delete this payment?",
+    });
   };
 
   const handleAddPaymentClick = () => {
@@ -112,6 +132,20 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
   const handleCancelPayment = () => {
     setShowPaymentForm(false);
     setEditingPaymentId(null);
+  };
+
+  // --- Confirmation dialog handlers ---
+  const handleConfirmDelete = async () => {
+    if (confirmDialog.type === 'transaction' && confirmDialog.item) {
+      await deleteTransaction(confirmDialog.itemId, localCustomer.id, confirmDialog.item);
+    } else if (confirmDialog.type === 'payment' && confirmDialog.item) {
+      await deletePayment(confirmDialog.itemId, localCustomer.id, confirmDialog.item);
+    }
+    setConfirmDialog({ open: false, type: null, itemId: null, item: null, title: "", message: "" });
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmDialog({ open: false, type: null, itemId: null, item: null, title: "", message: "" });
   };
 
   return {
@@ -133,5 +167,9 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
     handleDeletePayment,
     handleAddPaymentClick,
     handleCancelPayment,
+    // Confirmation Dialog
+    confirmDialog,
+    handleConfirmDelete,
+    handleCancelDelete,
   };
 }

@@ -184,6 +184,10 @@ function App() {
             onDeletePayment={detail.handleDeletePayment}
             onAddPaymentClick={detail.handleAddPaymentClick}
             onCancelPayment={detail.handleCancelPayment}
+            // Confirmation Dialog
+            confirmDialog={detail.confirmDialog}
+            onConfirmDelete={detail.handleConfirmDelete}
+            onCancelDelete={detail.handleCancelDelete}
             // Month navigation
             onPrevMonth={handlePrevMonth}
             onNextMonth={handleNextMonth}

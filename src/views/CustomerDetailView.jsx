@@ -5,6 +5,7 @@ import MilkCalendarView from "@components/milk/MilkCalendarView";
 import PaymentHistory from "@components/payments/PaymentHistory";
 import AddPaymentForm from "@components/payments/AddPaymentForm";
 import SummaryTab from "@components/summary/SummaryTab";
+import ConfirmDialog from "@components/modals/ConfirmDialog";
 import styles from "../App.module.css";
 
 export default function CustomerDetailView({
@@ -29,6 +30,10 @@ export default function CustomerDetailView({
   onDeletePayment,
   onAddPaymentClick,
   onCancelPayment,
+  // Confirmation Dialog
+  confirmDialog,
+  onConfirmDelete,
+  onCancelDelete,
   // Month navigation
   onPrevMonth,
   onNextMonth,
@@ -139,6 +144,14 @@ export default function CustomerDetailView({
           )}
         </div>
       </div>
+
+      <ConfirmDialog
+        open={confirmDialog.open}
+        title={confirmDialog.title}
+        message={confirmDialog.message}
+        onConfirm={onConfirmDelete}
+        onCancel={onCancelDelete}
+      />
     </>
   );
 }

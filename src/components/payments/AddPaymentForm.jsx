@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "@styles/add-payment-form.css";
+import ConfirmDialog from "@components/modals/ConfirmDialog";
 
 const AddPaymentForm = ({
   selectedMonth,
@@ -16,6 +17,8 @@ const AddPaymentForm = ({
   const [mode, setMode] = useState(initialData?.mode || "cash");
   const [notes, setNotes] = useState(initialData?.notes || "");
   const [error, setError] = useState("");
+  const [showWarningDialog, setShowWarningDialog] = useState(false);
+  const [pendingPaymentData, setPendingPaymentData] = useState(null);
 
   // Get the first and last day of the month for validation
   const [year, month] = selectedMonth.split("-").map(Number);
@@ -39,10 +42,14 @@ const AddPaymentForm = ({
     }
 
     if (amountNum > monthlyTotal) {
-      const response = window.confirm(
-        `Warning: Payment amount (₹${amountNum}) exceeds monthly consumption total (₹${monthlyTotal}). Continue?`,
-      );
-      if (!response) return;
+      setPendingPaymentData({
+        date,
+        amount: amountNum,
+        mode,
+        notes: notes.trim() || "",
+      });
+      setShowWarningDialog(true);
+      return;
     }
 
     const paymentData = {
@@ -62,6 +69,20 @@ const AddPaymentForm = ({
     setMode("cash");
     setNotes("");
     setError("");
+  };
+
+  const handleConfirmWarning = () => {
+    if (pendingPaymentData) {
+      onSubmit(pendingPaymentData);
+      resetForm();
+    }
+    setShowWarningDialog(false);
+    setPendingPaymentData(null);
+  };
+
+  const handleCancelWarning = () => {
+    setShowWarningDialog(false);
+    setPendingPaymentData(null);
   };
 
   const paymentModes = [
@@ -182,6 +203,14 @@ const AddPaymentForm = ({
           </div>
         </form>
       </div>
+
+      <ConfirmDialog
+        open={showWarningDialog}
+        title="Payment Amount Warning"
+        message={`Warning: Payment amount (₹${pendingPaymentData?.amount}) exceeds monthly consumption total (₹${monthlyTotal}). Continue?`}
+        onConfirm={handleConfirmWarning}
+        onCancel={handleCancelWarning}
+      />
     </div>
   );
 };

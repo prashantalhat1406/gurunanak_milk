@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "@styles/payment-history.css";
-import ConfirmDialog from "@components/modals/ConfirmDialog";
 import PaymentItem from "@components/payments/PaymentItem.jsx";
 import { getMonthMeta } from "../../utils/calandar-utils";
 
@@ -11,7 +10,6 @@ const PaymentHistory = ({
   onEdit,
   onDelete,
 }) => {
-  const [confirmData, setConfirmData] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
   const [showMonthPicker, setShowMonthPicker] = useState(false);
 
@@ -94,18 +92,9 @@ const PaymentHistory = ({
   // Calculate balance
   const balance = monthlyMilkAmount - totalPaid;
 
-  const handleDeleteClick = (payment) => {
-    // if (window.confirm(`Delete payment for ${payment.date}?`)) {
-    //   onDelete(payment.id);
-    // }
-    setConfirmData({
-      title: "Delete Payment?",
-      message: `Delete payment for ${payment.date}?`,
-      onConfirm: () => {
-        onDelete(payment.id);
-        setConfirmData(null);
-      },
-    });
+  // Handle delete by passing just the payment ID to the hook's delete handler
+  const handlePaymentDelete = (payment) => {
+    onDelete(payment.id);
   };
 
   const getModeIcon = (mode) => {
@@ -132,14 +121,6 @@ const PaymentHistory = ({
 
   return (
     <div className="payment-history-container">
-      <ConfirmDialog
-        open={!!confirmData}
-        title={confirmData?.title}
-        message={confirmData?.message}
-        onConfirm={confirmData?.onConfirm}
-        onCancel={() => setConfirmData(null)}
-      />
-
       {/* MONTH NAVIGATION */}
       <div className="payment-history-nav">
         <button onClick={handlePrevMonth} className="nav-button">
@@ -222,7 +203,7 @@ const PaymentHistory = ({
                 key={payment.id}
                 payment={payment}
                 onEdit={onEdit}
-                onDelete={handleDeleteClick}
+                onDelete={handlePaymentDelete}
                 getModeIcon={getModeIcon}
                 getModeName={getModeName}
               />
