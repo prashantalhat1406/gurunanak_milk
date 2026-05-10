@@ -156,10 +156,10 @@ const PaymentHistory = ({
           <div className="consumption-card">
             {/* <span className="consumption-label">Summary</span> */}
             <div className="consumption-details">
-              <div className="detail-item">
+              {/* <div className="detail-item">
                 <span className="detail-label">Qty:</span>
                 <span className="detail-value">{monthlyMilkQty} L</span>
-              </div>
+              </div> */}
               <div className="detail-item">
                 <span className="detail-label">Amount:</span>
                 <span className="detail-value">₹{monthlyMilkAmount}</span>

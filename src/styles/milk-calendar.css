@@ -107,11 +107,11 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s;
 }
 
-.mcal-cell:hover {
+/* .mcal-cell:hover {
   background: #f9f9f9;
   transform: translateY(-1px);
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-}
+} */
 
 .mcal-cell-empty {
   background: #f5f5f5;
@@ -201,8 +201,8 @@
 }
 
 .mcal-no-milk {
-  font-size: 10px;
-  color: #fff;
+  font-size: 12px;
+  color: #140101;
   font-weight: bold;
 }
 

@@ -33,11 +33,13 @@ const MilkMonthSummary = ({ transactions }) => {
             <span className="detail-value">{summary.totalMilk} L</span>
           </div>
           <div className="detail-item">
-            <span className="detail-label">🐄 Cow:</span>
+            {/* <span className="detail-label">🐄 Cow:</span> */}
+            <span className="detail-label">Cow:</span>
             <span className="detail-value">{summary.cowMilk} L</span>
           </div>
           <div className="detail-item">
-            <span className="detail-label">🐃 Buffalo:</span>
+            {/* <span className="detail-label">🐃 Buffalo:</span> */}
+            <span className="detail-label">Buffalo:</span>
             <span className="detail-value">{summary.buffaloMilk} L</span>
           </div>
           <div className="detail-item">
