@@ -57,16 +57,21 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
 
   // --- Transaction handlers ---
   const handleSaveTransaction = async (transactionData) => {
-    if (editingTransaction) {
-      await updateTransaction(editingTransaction.id, localCustomer.id, transactionData);
-    } else {
-      await addTransaction(localCustomer.id, transactionData);
-      // Auto-navigate to the new transaction's month
-      onMonthChange(transactionData.date.substring(0, 7));
+    try {
+      if (editingTransaction) {
+        await updateTransaction(editingTransaction.id, localCustomer.id, transactionData);
+      } else {
+        await addTransaction(localCustomer.id, transactionData);
+        // Auto-navigate to the new transaction's month
+        onMonthChange(transactionData.date.substring(0, 7));
+      }
+      setShowTransactionForm(false);
+      setEditingTransaction(null);
+      setTransactionDate(null);
+    } catch (error) {
+      console.error('Error saving transaction:', error);
+      alert('Failed to save transaction. Please try again.');
     }
-    setShowTransactionForm(false);
-    setEditingTransaction(null);
-    setTransactionDate(null);
   };
 
   const handleEditTransaction = (transaction) => {
@@ -98,13 +103,18 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
 
   // --- Payment handlers ---
   const handleSavePayment = async (paymentData) => {
-    if (editingPaymentId !== null) {
-      await updatePayment(editingPaymentId, localCustomer.id, paymentData);
-    } else {
-      await addPayment(localCustomer.id, paymentData);
+    try {
+      if (editingPaymentId !== null) {
+        await updatePayment(editingPaymentId, localCustomer.id, paymentData);
+      } else {
+        await addPayment(localCustomer.id, paymentData);
+      }
+      setShowPaymentForm(false);
+      setEditingPaymentId(null);
+    } catch (error) {
+      console.error('Error saving payment:', error);
+      alert('Failed to save payment. Please try again.');
     }
-    setShowPaymentForm(false);
-    setEditingPaymentId(null);
   };
 
   const handleEditPayment = (paymentId) => {
@@ -136,12 +146,18 @@ export function useCustomerDetail(selectedCustomer, onMonthChange) {
 
   // --- Confirmation dialog handlers ---
   const handleConfirmDelete = async () => {
-    if (confirmDialog.type === 'transaction' && confirmDialog.item) {
-      await deleteTransaction(confirmDialog.itemId, localCustomer.id, confirmDialog.item);
-    } else if (confirmDialog.type === 'payment' && confirmDialog.item) {
-      await deletePayment(confirmDialog.itemId, localCustomer.id, confirmDialog.item);
+    try {
+      if (confirmDialog.type === 'transaction' && confirmDialog.item) {
+        await deleteTransaction(confirmDialog.itemId, localCustomer.id, confirmDialog.item);
+      } else if (confirmDialog.type === 'payment' && confirmDialog.item) {
+        await deletePayment(confirmDialog.itemId, localCustomer.id, confirmDialog.item);
+      }
+      setConfirmDialog({ open: false, type: null, itemId: null, item: null, title: "", message: "" });
+    } catch (error) {
+      console.error('Error deleting item:', error);
+      alert('Failed to delete. Please try again.');
+      setConfirmDialog({ open: false, type: null, itemId: null, item: null, title: "", message: "" });
     }
-    setConfirmDialog({ open: false, type: null, itemId: null, item: null, title: "", message: "" });
   };
 
   const handleCancelDelete = () => {

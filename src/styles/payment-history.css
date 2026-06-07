@@ -417,6 +417,20 @@
   background: #999;
 }
 
+/* ConfirmDialog Modal Overlay - higher z-index than payment form */
+.modal-overlay:has(.confirm-modal) {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1002;
+}
+
 .confirm-modal {
   background: white;
   padding: 24px;
@@ -424,6 +438,8 @@
   width: 90%;
   max-width: 380px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 1003;
 }
 
 .modal-title {

@@ -151,6 +151,8 @@ export default function CustomerDetailView({
         message={confirmDialog.message}
         onConfirm={onConfirmDelete}
         onCancel={onCancelDelete}
+        confirmText="Delete"
+        cancelText="Cancel"
       />
     </>
   );

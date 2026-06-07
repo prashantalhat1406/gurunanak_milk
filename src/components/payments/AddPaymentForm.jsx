@@ -210,6 +210,8 @@ const AddPaymentForm = ({
         message={`Warning: Payment amount (₹${pendingPaymentData?.amount}) exceeds monthly consumption total (₹${monthlyTotal}). Continue?`}
         onConfirm={handleConfirmWarning}
         onCancel={handleCancelWarning}
+        confirmText="Confirm"
+        cancelText="Cancel"
       />
     </div>
   );

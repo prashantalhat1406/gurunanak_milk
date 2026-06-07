@@ -67,7 +67,8 @@ function App() {
       await saveCustomer(customerData, editingCustomer);
       setShowForm(false);
       setEditingCustomer(null);
-    } catch {
+    } catch (error) {
+      console.error('Error saving customer:', error);
       alert("Failed to save customer. Please try again.");
     }
   };
@@ -97,7 +98,8 @@ function App() {
       const today = new Date();
       const currentMonth = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}`;
       setSelectedMonth(currentMonth);
-    } catch {
+    } catch (error) {
+      console.error('Error loading customer details:', error);
       alert("Failed to load customer details. Please try again.");
     }
   };
@@ -113,8 +115,9 @@ function App() {
       await addTransaction(quickMilkCustomer.id, transactionData);
       setShowQuickMilkForm(false);
       setQuickMilkCustomer(null);
-    } catch {
-      alert("Failed to add milk transaction. Please try again.");
+    } catch (error) {
+      console.error('Error adding milk transaction:', error);
+      alert('Failed to add milk transaction. Please try again.');
     }
   };
 

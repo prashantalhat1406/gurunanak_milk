@@ -1,4 +1,12 @@
-export default function ConfirmDialog ({ open, title, message, onConfirm, onCancel }) {
+export default function ConfirmDialog ({ 
+  open, 
+  title, 
+  message, 
+  onConfirm, 
+  onCancel,
+  confirmText = "Delete",
+  cancelText = "Cancel"
+}) {
   if (!open) return null;
 
   return (
@@ -13,10 +21,10 @@ export default function ConfirmDialog ({ open, title, message, onConfirm, onCanc
 
         <div className="confirm-actions">
           <button className="btn secondary" onClick={onCancel}>
-            Cancel
+            {cancelText}
           </button>
           <button className="btn danger" onClick={onConfirm}>
-            Delete
+            {confirmText}
           </button>
         </div>
       </div>
