@@ -13,6 +13,7 @@ export default function CustomerListView({
   showForm,
   editingCustomer,
   onAddCustomerClick,
+  onOpenMonthlySummary,
   onSubmitCustomer,
   onCancelCustomer,
   onEditCustomer,
@@ -49,6 +50,7 @@ export default function CustomerListView({
         onSearchChange={onSearchChange}
         onClearSearch={onClearSearch}
         onAddCustomerClick={onAddCustomerClick}
+        onOpenMonthlySummary={onOpenMonthlySummary}
       />
 
       {showForm && (

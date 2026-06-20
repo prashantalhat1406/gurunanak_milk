@@ -3,6 +3,7 @@ const CustomerToolbar = ({
   onSearchChange,
   onClearSearch,
   onAddCustomerClick,
+  onOpenMonthlySummary,
 }) => {
   return (
     <div className="toolbar">
@@ -31,9 +32,16 @@ const CustomerToolbar = ({
         </div>
       </div>
 
-      <button className="btn-primary" onClick={onAddCustomerClick}>
-        + Add Customer
-      </button>
+      <div className="toolbar-actions">
+        {onOpenMonthlySummary && (
+          <button className="btn-secondary" onClick={onOpenMonthlySummary}>
+            Monthly Overview
+          </button>
+        )}
+        <button className="btn-primary" onClick={onAddCustomerClick}>
+          + Add Customer
+        </button>
+      </div>
     </div>
   );
 };

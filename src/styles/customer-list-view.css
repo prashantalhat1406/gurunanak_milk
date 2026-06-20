@@ -6,8 +6,11 @@
   align-items: center;
 }
 
-.toolbar button {
+.toolbar-actions {
+  display: flex;
+  gap: 10px;
   margin-left: auto;
+  align-items: center;
 }
 
 .btn-primary {

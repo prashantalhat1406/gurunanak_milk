@@ -8,10 +8,12 @@ import { useState } from "react";
 import Header from "@components/common/Header";
 import CustomerListView from "./views/CustomerListView";
 import CustomerDetailView from "./views/CustomerDetailView";
+import MonthlyCustomerOverview from "./views/MonthlyCustomerOverview";
 import SettingsModal from "@components/common/SettingsModal";
 
 import { useCustomers } from "./hooks/useCustomer";
 import { useCustomerDetail } from "./hooks/useCustomerDetail";
+import { useAllTransactions } from "./hooks/useAllTransactions";
 import { useMonthNavigation } from "./hooks/useMonthNavigation";
 import { addTransaction } from "./utils/dataService";
 
@@ -37,6 +39,8 @@ function App() {
   // --- Hooks ---
   const { customers, saveCustomer, removeCustomer, fetchCustomerDetails } =
     useCustomers();
+
+  const { transactions } = useAllTransactions();
 
   const { selectedMonth, setSelectedMonth, handlePrevMonth, handleNextMonth } =
     useMonthNavigation();
@@ -131,6 +135,10 @@ function App() {
     setSelectedCustomer(null);
   };
 
+  const handleOpenOverview = () => {
+    setViewMode("overview");
+  };
+
   return (
     <>
       <Header name="GuruNanak" onSettingsClick={() => setShowSettings(true)} />
@@ -149,6 +157,7 @@ function App() {
             showForm={showForm}
             editingCustomer={editingCustomer}
             onAddCustomerClick={() => setShowForm(true)}
+            onOpenMonthlySummary={handleOpenOverview}
             onSubmitCustomer={handleSubmitCustomer}
             onCancelCustomer={() => {
               setShowForm(false);
@@ -161,6 +170,16 @@ function App() {
             quickMilkCustomer={quickMilkCustomer}
             onQuickMilkSubmit={handleQuickMilkSubmit}
             onQuickMilkCancel={handleQuickMilkCancel}
+          />
+        ) : viewMode === "overview" ? (
+          <MonthlyCustomerOverview
+            customers={filteredCustomers}
+            transactions={transactions}
+            selectedMonth={selectedMonth}
+            onPrevMonth={handlePrevMonth}
+            onNextMonth={handleNextMonth}
+            onMonthChange={setSelectedMonth}
+            onBackToList={handleBackToList}
           />
         ) : (
           <CustomerDetailView

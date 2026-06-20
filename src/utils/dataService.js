@@ -181,6 +181,27 @@ export const subscribeToTransactions = (customerId, callback) => {
 };
 
 /**
+ * Real-time listener for all transactions across customers
+ */
+export const subscribeToAllTransactions = (callback) => {
+  const transactionsCollection = collection(db, 'transactions');
+  const unsubscribe = onSnapshot(
+    transactionsCollection,
+    (snapshot) => {
+      const transactions = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      callback(transactions);
+    },
+    (error) => {
+      console.error('Error subscribing to all transactions:', error);
+    }
+  );
+  return unsubscribe;
+};
+
+/**
  * Add a new milk transaction
  */
 export const addTransaction = async (customerId, transactionData) => {
